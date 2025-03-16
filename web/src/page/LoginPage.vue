@@ -20,13 +20,8 @@
                 label="Password"
                 clearable />
             <!-- ボタン -->
-<!-- 
-                To Do: バリデーション
-                v-formで囲むなら、type=Submitいるのでは? -->
-            <Button label="Login"
-                    @click="onLogin" />
+            <Button label="Login" type="submit" />
             </v-form>
-            
         </v-card>
     </v-sheet>
 
@@ -63,20 +58,17 @@ const onLogin = async () => {
 
     // API通信（POST）
     api.login(data).then(res => {
-        const response = res.data;
+        const status = res.data.status;
+        const data = res.data.data;
+        const message = res.data.message;
 
-        // レスポンスの確認
-        const resStatus = response.status;
-        const resData = response.data;
-        const resMessage = response.message;
-        console.log('status:', resStatus);
-        console.log('data:', resData);
-        console.log('message:', resMessage);
+        if (status === 200) {
+            console.log("Success:", data);
+            // ホーム画面に遷移する。
+            router.push({ name: 'home' })
 
-        if (resStatus === 200) {
-            // データをセットする。
-            text.value = 'User Name: ' + resData.userName + ' Password: ' + resData.password;
-            router.push({ name: 'home' });
+        } else if (status === 401) {
+            console.error("Error:", message);
         }
 
     }).catch(error => {

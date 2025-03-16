@@ -1,8 +1,10 @@
 package com.space.ap.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor 
 public class User {
 
     /** ユーザー名 */
