@@ -20,7 +20,7 @@
                 label="Password"
                 clearable />
             <!-- ボタン -->
-            <!-- 
+<!-- 
                 To Do: バリデーション
                 v-formで囲むなら、type=Submitいるのでは? -->
             <Button label="Login"
@@ -35,8 +35,12 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import api from '@/api/api'
 import Button from '@/component/thing/Button.vue';
+
+/** ルーター */
+const router = useRouter()
 
 /** リアクティブデータの定義 */
 const text = ref("View the response.");
@@ -72,6 +76,7 @@ const onLogin = async () => {
         if (resStatus === 200) {
             // データをセットする。
             text.value = 'User Name: ' + resData.userName + ' Password: ' + resData.password;
+            router.push({ name: 'home' });
         }
 
     }).catch(error => {
