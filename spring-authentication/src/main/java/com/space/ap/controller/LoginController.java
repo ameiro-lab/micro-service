@@ -1,5 +1,7 @@
 package com.space.ap.controller;
 
+import static com.space.ap.util.JwtUtil.generateToken;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +26,11 @@ public class LoginController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    /**
+     * ユーザー名・パスワードを送ると、JWT を発行する。
+     * @param loginRequest
+     * @return
+     */
     @PostMapping("/login")
     public ApiResponse login(@RequestBody User loginRequest) {
 
@@ -42,10 +49,14 @@ public class LoginController {
             // 認証済み情報を SecurityContext に保存する。
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
+            // JWT を発行
+            String token = generateToken(userName);
+
             // 正常系
             Map<String, Object> data = new HashMap<>();
             data.put("userName", userName);
             data.put("password", password);
+            data.put("token", token);
             return ApiResponse.success(data);
 
         } catch (BadCredentialsException e) {
