@@ -3,8 +3,6 @@ package com.space.ap.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -52,15 +50,6 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);             // すべてのパスに適用
         
         return source;
-    }
-
-    /**
-     * 認証マネージャーの設定
-     * ログイン認証処理で使用される
-     */
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();
     }
 
     /**

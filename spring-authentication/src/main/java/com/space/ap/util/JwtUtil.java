@@ -1,62 +1,51 @@
 package com.space.ap.util;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.security.Key;
 
 import org.springframework.stereotype.Component;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTCreationException;
 
 /*
  * Json Web Token ユーティリティクラス
  */
 @Component
 public class JwtUtil {
-    private static final String SECRET_KEY = "your-very-secure-and-long-secret-key-32bytes!!"; // 32文字以上
-    private static final long EXPIRATION_TIME = 1000 * 60 * 60; // 1時間
-
-    private static final Key KEY = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
 
     /**
      * JWT を発行する。
      * @param username
      * @return
      */
-    public static String generateToken(String username) {
-        return Jwts.builder()
-                .setSubject(username) // ユーザー名をセット
-                .setIssuedAt(new Date()) // 発行日時
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME)) // 有効期限
-                .signWith(KEY, SignatureAlgorithm.HS256) // 署名
-                .compact();
-    }
+    public String generateToken(String username) {
 
-    /**
-     * JWT を解析し、クレームを取得する。
-     * @param token
-     * @return
-     */
-    public static Claims extractClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(KEY)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-    }
+        // シークレットキー（通常は設定ファイルや環境変数から読み込む）
+        final String SECRET_KEY = "your-very-secure-and-long-secret-key-32bytes";
 
-    public String extractUsername(String token) {
-        return extractClaims(token).getSubject();
-    }
+        final Long EXPIRATION_TIME = 1000L * 60L * 60L * 1L;
 
-    public boolean isTokenValid(String token, String username) {
-        return (username.equals(extractUsername(token)) && !isTokenExpired(token));
-    }
+        try {
 
-    private boolean isTokenExpired(String token) {
-        return extractClaims(token).getExpiration().before(new Date());
+            //生成のため、日時データを取得する
+            Date issuedAt = new Date();
+            Date notBefore = new Date(issuedAt.getTime());
+            Date expiresAt = new Date(issuedAt.getTime() + EXPIRATION_TIME);
+
+            return JWT.create()
+                .withIssuer("わたし")     // 発行するシステムやサービスの識別情報
+                .withSubject(username)          // ユーザーやクライアントの識別情報
+                .withAudience(username)         // トークンの利用者（メールアドレスを用いてトークンを一意にする）
+                .withIssuedAt(issuedAt)         // 発行日時
+                .withNotBefore(notBefore)       // 有効期間開始時間
+                .withExpiresAt(expiresAt)       // 有効期間終了時間 今回はログアウト、セッションタイムアウトまで保持
+                .withClaim("username", username)  // カスタムクレームの追加
+                .sign(Algorithm.HMAC256(SECRET_KEY)); //  署名を行う(HMAC256アルゴリズムで署名アルゴリズム)
+
+        } catch(JWTCreationException exception) {
+            throw new RuntimeException("トークン生成に失敗しました", exception);
+        }    
     }
+    
 }
