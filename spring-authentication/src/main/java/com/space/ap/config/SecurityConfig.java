@@ -3,6 +3,8 @@ package com.space.ap.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -53,11 +55,30 @@ public class SecurityConfig {
     }
 
     /**
-     * パスワードエンコーダーの設定
-     * ユーザーパスワードのハッシュ化に使用される
+     * パスワードをハッシュ化・照合するための PasswordEncoder を Spring コンテナに登録する。
+     * 
+     * Spring Security はパスワードの比較時に PasswordEncoder を必要とするが、
+     * デフォルトでは登録されていないため、アプリケーションで明示的に定義する必要がある。
+     *
+     * この Bean は以下のような場面で使用される：
+     * - ユーザー登録時に平文パスワードをハッシュ化する
+     * - ログイン認証時に入力されたパスワードとDB上のハッシュを比較する
      */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    /**
+     * 認証処理の中核となる AuthenticationManager を Spring コンテナに登録する。
+     * Spring Security では AuthenticationManager は自動で Bean 化されないため、
+     * 明示的に定義して Controller などで注入できるようにする必要がある。
+     *
+     * @param config Spring が内部で用意する AuthenticationConfiguration
+     * @return 認証に使用する AuthenticationManager
+     */
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 }
