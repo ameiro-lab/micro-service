@@ -1,4 +1,4 @@
-package com.space.ap.service;
+package com.space.auth.service;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.space.ap.model.User;
+import com.space.auth.model.User;
 
 @Service
 public class LoginService implements UserDetailsService {
@@ -25,7 +25,7 @@ public class LoginService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
 
     // @Autowired
-    // private UserRepository userRepository; // 実際にDBができたらリポジトリをインジェクトする
+    // private UserRepository userRepository; // TO DO：実際にDBができたらリポジトリをインジェクトする
 
     /**
      * ユーザー名でユーザーをロードし、ユーザー情報を返す。
@@ -61,7 +61,7 @@ public class LoginService implements UserDetailsService {
      */
     public String generateToken(UserDetails user) {
         try {
-            // RSA鍵ペアの生成（通常はここではなく外部ファイルやキーストアから読み込みます）
+            // RSA鍵ペアの生成（TO DO：通常はここではなく外部ファイルやキーストアから読み込む）
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
             keyGen.initialize(2048);
             KeyPair keyPair = keyGen.generateKeyPair();

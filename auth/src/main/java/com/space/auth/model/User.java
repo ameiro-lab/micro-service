@@ -1,4 +1,4 @@
-package com.space.ap.model;
+package com.space.auth.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
