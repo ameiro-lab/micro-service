@@ -1,4 +1,4 @@
-package com.space.ap.config;
+package com.space.auth.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

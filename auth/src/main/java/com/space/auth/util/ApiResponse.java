@@ -1,4 +1,4 @@
-package com.space.ap.util;
+package com.space.auth.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

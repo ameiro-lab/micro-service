@@ -2,11 +2,11 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Spring Boot-ApApplication<ap>",
+            "name": "Spring Boot-AuthApplication<auth>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
-            "mainClass": "com.space.ap.ApApplication",
-            "projectName": "ap",
+            "mainClass": "com.space.auth.AuthApplication",
+            "projectName": "auth",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         }
