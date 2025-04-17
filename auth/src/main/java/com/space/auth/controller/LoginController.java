@@ -1,5 +1,6 @@
 package com.space.auth.controller;
 
+import java.util.Collections;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.space.auth.model.User;
 import com.space.auth.service.LoginService;
 import com.space.auth.util.ApiResponse;
+import com.space.auth.util.AppException;
+import com.space.auth.util.ErrorCode;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -29,6 +32,7 @@ public class LoginController {
     private final AuthenticationManager authenticationManager;
     private final LoginService loginService;
 
+
     @Autowired
     public LoginController(LoginService loginService, AuthenticationManager authenticationManager) {
             this.loginService = loginService;
@@ -37,8 +41,8 @@ public class LoginController {
 
     /**
      * ユーザー名・パスワードを送ると、JWT を発行する。
-     * @param loginRequest
-     * @return
+     * @param loginRequest ログイン情報
+     * @return レスポンス情報
      */
     @PostMapping("/login")
     public ApiResponse login(@RequestBody User loginRequest, HttpServletResponse response) {
@@ -87,8 +91,10 @@ public class LoginController {
             return ApiResponse.success(data);
 
         } catch (UsernameNotFoundException | BadCredentialsException e) {
-            // 認証失敗: パスワードまたはユーザー名が間違っている場合
-            return new ApiResponse(401, e.getMessage());
+
+            // 認証失敗: パスワードまたはユーザー名が間違っている場合、
+            // カスタム例外クラス(AppException)を生成、handleAppExceptionが実行される。
+            throw new AppException(ErrorCode.JWT_GENERATION_FAILED, Collections.emptyMap());
         }
     }
 }
