@@ -5,7 +5,8 @@ public enum ErrorCode {
 
     /** enum の定数定義 */
     USER_NOT_FOUND(404, "E-AUTH-001", "ユーザーが見つかりません。"),
-    JWT_GENERATION_FAILED(500, "E-JWT-001", "JWTの生成に失敗しました。");
+    JWT_GENERATION_FAILED(500, "E-JWT-001", "JWTの生成に失敗しました。"),
+    USER_IMPORT_FAILED(500, "E-AUTH-005", "ユーザーCSVのインポートに失敗しました。");
 
     /** フィールド */
     private final int httpStatus;

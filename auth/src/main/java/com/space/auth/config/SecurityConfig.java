@@ -30,6 +30,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())  // REST APIではCSRF保護は通常無効化
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers(HttpMethod.POST, "/api/login").permitAll()  // ログインAPIは認証不要
+                .requestMatchers(HttpMethod.POST, "/api/import/users").permitAll()  // ユーザーインポートAPIも認証不要
                 .anyRequest().authenticated()                                // その他は認証必須
             )
             .cors(cors -> cors.configurationSource(corsConfigurationSource()));  // CORS設定の適用
