@@ -48,15 +48,14 @@ public class LoginController {
     public ApiResponse login(@RequestBody User loginRequest, HttpServletResponse response) {
 
         try {
-            
             // Spring Securityでユーザー名とパスワードが本物かどうか検証
             Authentication authentication = authenticationManager.authenticate( // authenticateメソッド
                 // ユーザー名とパスワードを保持した 未認証トークンを生成
-                new UsernamePasswordAuthenticationToken(loginRequest.getUserName(), loginRequest.getPassword())
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
             /**
-             * authenticateメソッドの内部処理
+             * authenticateメソッドの内部処理メモ
              * 1：適切な AuthenticationProvider を選ぶ
-             * 2：UserDetailsService#loadUserByUsernameが呼ばれ、ユーザー名に該当するユーザーをDBから取得する
+             * 2：LoginService#loadUserByUsernameが呼ばれ、ユーザー名に該当するユーザーをDBから取得する
              * 3：入力された平文パスワードと、DBから取得したハッシュ済みパスワードを照合
              * 4：成功したら「認証済みのトークン」を返す
              */
@@ -91,9 +90,12 @@ public class LoginController {
             return ApiResponse.success(data);
 
         } catch (UsernameNotFoundException | BadCredentialsException e) {
-
-            // 認証失敗: パスワードまたはユーザー名が間違っている場合、
+            // パスワードまたはユーザー名が間違っている場合、
             // カスタム例外クラス(AppException)を生成、handleAppExceptionが実行される。
+            throw new AppException(ErrorCode.USER_NOT_FOUND, Collections.emptyMap());
+
+        } catch (RuntimeException e) {
+            // JWT発行に失敗した場合も同様（@ExceptionHandler(AppException.class)により、handleAppExceptionが実行される）
             throw new AppException(ErrorCode.JWT_GENERATION_FAILED, Collections.emptyMap());
         }
     }
