@@ -17,15 +17,18 @@ import org.springframework.stereotype.Service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.space.auth.model.User;
+import com.space.auth.repository.UserRepository;
 
 @Service
 public class LoginService implements UserDetailsService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
 
-    // @Autowired
-    // private UserRepository userRepository; // TO DO：実際にDBができたらリポジトリをインジェクトする
+    // コンストラクタインジェクション　※現在、推奨されている方法
+    @Autowired
+    public LoginService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+    }
 
     /**
      * ユーザー名でユーザーをロードし、ユーザー情報を返す。
@@ -37,18 +40,14 @@ public class LoginService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         // 実際のDBアクセス
-        // User user = userRepository.findByUserName(username)
-        //     .orElseThrow(() -> new UsernameNotFoundException("ユーザーが見つかりませんでした: " + username));
-
-        // デバッグ用:
-        String plainPassword = "123"; // 実際のアプリケーションではユーザー入力によるパスワードを使う
-        String encodedPassword = passwordEncoder.encode(plainPassword); // プレーンテキストのパスワードをハッシュ化
-        // デバッグ用: テストレコード生成
-        User user = new User(username, encodedPassword);
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("ユーザーが見つかりません: " + username);
+        }
             
         // JWTトークンにはパスワードは含まれていないので、ここではパスワードなしでユーザー情報を返す
         return org.springframework.security.core.userdetails.User
-        .withUsername(user.getUserName())
+        .withUsername(user.getUsername())
         .password(user.getPassword())
         .authorities("USER") // ユーザー権限を付与
         .build();
@@ -81,7 +80,8 @@ public class LoginService implements UserDetailsService {
                     .sign(algorithm);   // RSA256で署名
 
         } catch (Exception e) {
-            throw new RuntimeException("JWT生成エラー: " + e.getMessage(), e);
+            // 例外処理：RSA鍵ペアの生成やJWTの署名に失敗した場合。ひとまずRuntimeExceptionを人工生成する。
+            throw new RuntimeException(e);
         }
     }
 }
