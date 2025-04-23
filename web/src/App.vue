@@ -6,6 +6,8 @@
 
 </script>
 
-<style scoped>
-
+<style>
+* {
+  font-family: 'Poppins', sans-serif !important;
+}
 </style>
