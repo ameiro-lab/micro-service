@@ -1,5 +1,6 @@
 // src/plugins/router.js
 import { createRouter, createWebHistory } from 'vue-router'
+import PawLayout from '@/layout/PawLayout.vue'
 
 // ルート定義
 const routes = [
@@ -9,9 +10,25 @@ const routes = [
 			component: () => import('../page/LoginPage.vue')
 	},
 	{
-    path: '/home',
-    name: 'home',
-    component: () => import('../page/HomePage.vue')
+    path: '/',
+    component: PawLayout,
+    children: [
+      {
+        path: '/home',
+        name: 'home',
+        component: () => import('@/page/HomePage.vue')
+      },
+      {
+        path: '/aboutme',
+        name: 'aboutme',
+        component: () => import('@/page/AboutMePage.vue')
+      },
+      {
+        path: '/works',
+        name: 'works',
+        component: () => import('@/page/WorksPage.vue')
+      },
+    ]
   },
 	{
     path: '/:pathMatch(.*)*',
