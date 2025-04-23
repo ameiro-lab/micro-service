@@ -70,7 +70,7 @@ const onLogin = async () => {
     const { status, data, message } = res.data;
 
     if (status === 200) {
-      console.log("Success:", data);
+      // console.log("Success:", data);
       // ホーム画面に遷移する。
       router.push({ name: 'home' })
 

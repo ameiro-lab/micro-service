@@ -24,7 +24,8 @@
       <v-list-item v-for="item in drawerMenuList" :key="item.value"
         :prepend-icon="item.icon"
         :title="item.title"
-        :value="item.value"  />
+        :value="item.value"
+        @click="onItemClick(item)"  />
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -42,10 +43,15 @@ const isDrawer = ref(false);
 const drawerMenuList = [
   { title: 'Home', value: 'home', icon: 'mdi-home-city' },
   { title: 'About Me', value: 'aboutme', icon: 'mdi-face-woman-profile' },
-  { title: 'Work', value: 'work', icon: 'mdi-laptop-account' },
+  { title: 'Works', value: 'works', icon: 'mdi-laptop-account' },
   { title: 'Contact', value: 'contact', icon: 'mdi-earth' },
 ]
 
 /** メソッドの定義 */
+// メニューアイテム押下時
+function onItemClick(item) {
+  // ルーターの遷移
+  router.push(item.value) // drawerMenuList内のvalueを指定
+}
 
 </script>

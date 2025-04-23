@@ -7,7 +7,6 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from "vue";
 
 /** props */
 defineProps({
