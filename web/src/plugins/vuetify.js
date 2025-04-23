@@ -26,4 +26,10 @@ export default createVuetify({
       },
     },
   },
+  defaults: {
+    // 各textプロパティの uppercase を無効化
+    VBtn: { style: 'text-transform: none;' },
+    VTab: { style: 'text-transform: none;' },
+    VChip: { style: 'text-transform: none;' },
+  },
 })
