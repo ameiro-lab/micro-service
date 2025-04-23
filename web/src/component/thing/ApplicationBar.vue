@@ -1,0 +1,51 @@
+<template>
+  <v-app-bar
+    :elevation="2" color="primary" density="compact">
+    <template v-slot:append>
+      <v-app-bar-nav-icon
+        icon="mdi-bone"
+        @click="isDrawer = !isDrawer" />
+    </template>
+    <v-app-bar-title>Tech Pawprints</v-app-bar-title>
+  </v-app-bar>
+
+  <!-- サイドメニュー（TO DO：背景画像を設定する） -->
+  <v-navigation-drawer temporary
+    v-model="isDrawer" location="end">
+    <!-- アイコン -->
+    <v-list-item
+      lines="two"
+      prepend-avatar="https://github.com/ameiro-lab.png"
+      title="Ameiro-Lab"
+      subtitle="portfolio"  />
+    <v-divider></v-divider>
+    <!-- アイテム -->
+    <v-list density="compact" nav>
+      <v-list-item v-for="item in drawerMenuList" :key="item.value"
+        :prepend-icon="item.icon"
+        :title="item.title"
+        :value="item.value"  />
+    </v-list>
+  </v-navigation-drawer>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import api from '@/api/api'
+import { useRouter } from 'vue-router'
+
+/** ルーター */
+const router = useRouter()
+
+/** リアクティブデータの定義 */
+const isDrawer = ref(false);
+const drawerMenuList = [
+  { title: 'Home', value: 'home', icon: 'mdi-home-city' },
+  { title: 'About Me', value: 'aboutme', icon: 'mdi-face-woman-profile' },
+  { title: 'Work', value: 'work', icon: 'mdi-laptop-account' },
+  { title: 'Contact', value: 'contact', icon: 'mdi-earth' },
+]
+
+/** メソッドの定義 */
+
+</script>
