@@ -6,7 +6,7 @@
         icon="mdi-bone"
         @click="isDrawer = !isDrawer" />
     </template>
-    <v-app-bar-title>Tech Pawprints</v-app-bar-title>
+    <v-app-bar-title>{{ title }}</v-app-bar-title>
   </v-app-bar>
 
   <!-- サイドメニュー（TO DO：背景画像を設定する） -->
@@ -39,7 +39,8 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 /** リアクティブデータの定義 */
-const isDrawer = ref(false);
+const title = ref('Tech Pawprints');
+const isDrawer = ref(false); 
 const drawerMenuList = [
   { title: 'Home', value: 'home', icon: 'mdi-home-city' },
   { title: 'About Me', value: 'aboutme', icon: 'mdi-face-woman-profile' },
