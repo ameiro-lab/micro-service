@@ -1,16 +1,23 @@
 <template>
-  <v-row>
-    <!-- テキスト -->
-    <v-col cols="7">
-      <v-card color="green">
-        <v-card-title class="font-weight-bold">Welcome to my portfolio!</v-card-title>
-        <v-card-text>
+  <!-- カード１ -->
+  <v-row dense justify="center">
+    <v-col cols="12" :md="md">
+      <v-card color="green" :variant="variant" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
+        <v-card-title :class="titleClass">Welcome to my portfolio!</v-card-title>
+        <v-card-text :class="textClass">
           <p>Here, you’ll find an introduction to who I am as a developer, the projects I’ve built, and the journey I’m on—with a little help from my loyal assistant, Mugi the dog 🐕💻</p>
           <p>Whether you’re sniffing around out of curiosity or scouting for talent, I hope you enjoy exploring this space!</p>
         </v-card-text>
+      </v-card>
+    </v-col>
+  </v-row>
 
-        <v-card-title class="font-weight-bold">About Me</v-card-title>
-        <v-card-text>
+  <!-- カード２ -->
+  <v-row dense justify="center">
+    <v-col cols="12" :md="md">
+      <v-card color="green" :variant="variant" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
+        <v-card-title :class="titleClass">About Me</v-card-title>
+        <v-card-text :class="textClass">
           <p>I am a passionate software developer based in Tokyo, Japan.</p>
           <p>My career began in a completely different field. I studied the humanities at junior college and worked in an administrative role for five years. However, my curiosity for technology and my love for creating things led me to transition into software development in 2022. Since then, I have been continuously learning and improving my skills in web development.</p>
           <p>Every day brings new challenges and opportunities for growth, but I find great joy in coding and building meaningful applications. This journey has been both exciting and fulfilling, and I am eager to continue deepening my expertise in the field.</p>
@@ -18,20 +25,49 @@
         </v-card-text>
       </v-card>
     </v-col>
-    <!-- レーダーチャート -->
-    <v-col cols="5">
+  </v-row>
+
+  <!-- カード３ -->
+  <v-row dense justify="center">
+    <v-col cols="12" :md="md">
       <v-card color="base">
         <Radar :data="data" :options="options" />
       </v-card>
+    </v-col>
+  </v-row>
+
+  <!-- キャラクター -->
+  <v-row dense>
+    <v-spacer></v-spacer>
+    <v-col cols="4" class="d-none d-md-flex justify-end align-end">
+      <div style="width: 200px; height: auto;">
+        <BasicOsuwari @on-click="onclickBasicOsuwari" />
+      </div>
     </v-col>
   </v-row>
   
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import api from '@/api/api'
+import { ref, computed } from 'vue'
+import { useDisplay } from 'vuetify'
+import BasicOsuwari from '@/component/thing/BasicOsuwari.vue'
 
+// Vuetifyの画面サイズ情報を取得（useDisplayはVuetifyが提供するComposable）
+const { mobile } = useDisplay()
+
+// variant を computed で動的に切り替え
+const variant = computed(() => {
+  if (mobile.value) return 'flat'
+  return isHovered.value ? 'elevated' : 'plain'
+})
+
+// 共通データ
+const md = 6;
+const titleClass = 'text-h5 font-weight-bold'
+const textClass = 'text-body-1'
+
+const isHovered = ref(false)
 
 import {
   Chart as ChartJS,
@@ -103,7 +139,7 @@ const options = {
         // color: 'orange',
       },
       pointLabels: {
-        color: 'rgba(218, 165, 105, 1)', // 項目テキストの色
+        color: 'black', // 項目テキストの色
       },
     },
   },
@@ -130,5 +166,20 @@ const options = {
 /** リアクティブデータの定義 */
 
 /** メソッドの定義 */
+const onclickBasicOsuwari = () => {
+  console.log('Osuwari clicked!')
+}
+
+const onMouseEnter = () => {
+  isHovered.value = true
+}
+
+const onMouseLeave = () => {
+  
+}
 
 </script>
+
+<style>
+
+</style>
