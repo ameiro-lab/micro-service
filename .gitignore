@@ -133,3 +133,4 @@ auth/src/main/resources/users.csv
 web/src/assets/bg-img/
 web/src/ATemplate.vue
 web/src/page/LoginPage.vue
+web/src/assets/svg/
