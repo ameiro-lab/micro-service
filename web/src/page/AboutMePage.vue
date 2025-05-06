@@ -1,17 +1,4 @@
 <template>
-  <!-- カード１ -->
-  <v-row dense justify="center">
-    <v-col cols="12" :md="md">
-      <v-card color="green" :variant="variant" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
-        <v-card-title :class="titleClass">Welcome to my portfolio!</v-card-title>
-        <v-card-text :class="textClass">
-          <p>Here, you’ll find an introduction to who I am as a developer, the projects I’ve built, and the journey I’m on—with a little help from my loyal assistant, Mugi the dog 🐕💻</p>
-          <p>Whether you’re sniffing around out of curiosity or scouting for talent, I hope you enjoy exploring this space!</p>
-        </v-card-text>
-      </v-card>
-    </v-col>
-  </v-row>
-
   <!-- カード２ -->
   <v-row dense justify="center">
     <v-col cols="12" :md="md">
@@ -45,6 +32,10 @@
       </div>
     </v-col>
   </v-row>
+
+  <div style="width: 200px; height: auto;">
+    <VectorTest />
+  </div>
   
 </template>
 
@@ -52,6 +43,8 @@
 import { ref, computed } from 'vue'
 import { useDisplay } from 'vuetify'
 import BasicOsuwari from '@/component/thing/BasicOsuwari.vue'
+
+import VectorTest from '@/component/thing/VectorTest.vue'
 
 // Vuetifyの画面サイズ情報を取得（useDisplayはVuetifyが提供するComposable）
 const { mobile } = useDisplay()

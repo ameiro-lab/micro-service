@@ -1,173 +1,247 @@
 <template>
-  <v-row class="card-row">
-    <!-- カードをv-colで囲んでグリッドシステムを適用 -->
-    <v-col class="card-column"
-      v-for="(item, index) in cardItemList" :key="item.value"
-      cols="12" md="6" lg="4">
-      <!-- カード -->
-      <v-card class="card-content" @click="onGo(item)"
-        :style="getCardStyle(index)" color="black"
-        hover
-        @mouseenter="hoverStates[index] = true"
-        @mouseleave="hoverStates[index] = false">
-        <div class="card-inner">
-          <div class="text-h5 font-weight-bold">
-            {{ item.title }}
-          </div>
-          <div v-for="(line, i) in formatText(item.text)" :key="i">
-            {{ line }}
-          </div>
-          <div class="button-container">
-            <v-btn
-              :text="`Go to ${item.buttonText}`"
-              append-icon="mdi-chevron-right"
-              :color="index === 0 
-                        ? 'accent' 
-                        : (index % 2 === 0 ? 'green' : 'base')"
-              variant="flat"
-              block />
-          </div>
-        </div>
+  <!-- wellcome -->
+  <v-row dense v-if="showOpen">
+    <v-col cols="12">
+      <v-card color="green" variant="outlined">
+        <v-card-title :class="titleClass">Welcome to my portfolio!</v-card-title>
+        <v-card-text :class="textClass">
+          <p>Here, you’ll find an introduction to who I am as a developer, the projects I’ve built, and the journey I’m on—with a little help from my loyal assistant, Mugi the dog.</p>
+          <p>Whether you’re sniffing around out of curiosity or scouting for talent, I hope you enjoy exploring this space!</p>
+          <p>So, first things first — call your buddy with a sweet potato!</p>
+        </v-card-text>
       </v-card>
     </v-col>
+    <v-col cols="12">
+      <div v-if="showOpen">
+        <CoreButton label="Come here, Mugi!" @click="handleOpenClick" />
+      </div>
+    </v-col>
   </v-row>
+
+  <div class="home-container">
+    <div v-show="!showOpen" ref="slideInDiv"
+      class="slide-in"
+      style="width: 200px; height: auto;">
+      <BasicOsuwari @on-click="onclickBasicOsuwari" />
+      <!-- 吹き出し -->
+      <div class="speech-bubble">
+        {{ speechBubbleText }}
+      </div>
+    </div>
+
+    <!-- 円形に配置される選択肢 -->
+    <div class="circle option-circle"
+      v-for="(item, index) in itemList"
+      :key="item.value"
+      :ref="el => circleRefs[index] = el"
+      @click="onGo(item.value)"
+      @mouseenter="speechBubbleText = item.text"
+      @mouseleave="speechBubbleText = 'Need something?'"
+      >
+      {{ item.label }}
+    </div>
+
+  </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, watch } from 'vue'
+import { gsap } from 'gsap'
 import { useRouter } from 'vue-router'
-import bgYabu from '@/assets/bg-img/bg_yabu.jpg'
-import guideMugi from '@/assets/bg-img/hover.jpg'
-import bgSougen from '@/assets/bg-img/bg_sougen.jpg'
-import bgYozora from '@/assets/bg-img/bg_yozora.jpg'
-import bgMoon from '@/assets/bg-img/bg_moon.jpg'
-import bgOshiro from '@/assets/bg-img/bg_oshiro.jpg'
+import BasicOsuwari from '@/component/thing/BasicOsuwari.vue'
+import CoreButton from '@/component/thing/CoreButton.vue'
 
 /** ルーター */
 const router = useRouter()
 
-/** データの定義 */
-const cardItemList = [
+// 状態管理
+const showOpen = ref(true) // Openボタンの表示状態を管理するリアクティブな変数
+const slideInDiv = ref(null);
+const circleRefs = [] // 各円形ボタンの要素参照を格納する配列
+
+const speechBubbleText = ref('Need me? Let me know what you’d like to check out!')
+const itemList = [
+  {
+    value: 'none',
+    title: 'No Title',
+    text: 'Hmm... Try another!',
+    label: '???',
+  },
   {
     value: 'aboutme',
-    title: 'Paws up and nice to meet you!',
-    text: 'Sniff sniff... who’s that?\nI’m so happy to meet you!\nWould you like to know what my human is up to?\nCome check it out!',
-    buttonText: 'About Me',
-    image: bgOshiro,
-    hoverImage: guideMugi,
+    text: 'Curious about what my owner’s like?',
+    label: 'About Me',
   },
   {
     value: 'works',
-    title: 'Buried Treasures of My Code!',
-    text: 'Would you like to see what I’ve dug up?\nSome cool tech treasures await—go on, take a peek!\nFrom back-end magic to front-end gems, it’s all here!',
-    buttonText: 'Works',
-    image: bgYabu,
-    hoverImage: guideMugi,
+    text: 'Want to see our treasures?',
+    label: 'Works',
   },
   {
     value: 'contact',
-    title: 'Need Help?',
-    text: 'Do you have a question or a request?\nNo worries—I’ll fetch it to my human right away!\nJust leave a message, and I’ll make sure they hear you.\nTail wagging all the way! 🐾',
-    buttonText: 'Contact',
-    image: bgSougen,
-    hoverImage: guideMugi,
+    text: 'Inquiries about work here.',
+    label: 'Contact',
   },
   {
-    value: 'home',
-    title: 'No Title',
-    text: 'Coming Soon...',
-    buttonText: '???',
-    image: bgYozora,
-    hoverImage: guideMugi,
-  },
-  {
-    value: 'home',
-    title: 'No Title',
-    text: 'Coming Soon...',
-    buttonText: '???',
-    image: bgMoon,
-    hoverImage: guideMugi,
+    value: 'logout',
+    text: 'Had enough?',
+    label: 'Logout',
   },
 ];
-// ホバー状態の管理
-const hoverStates = ref(cardItemList.map(function() {
-  return false; // 初期値は全てfalse
-// 例：cardItemListが3つの要素を持っている場合
-// const hoverStates = ref([false, false, false]);
-}));
 
-/** メソッドの定義 */
-// 画面遷移
-function onGo(item) {
+onMounted(() => {
+  // デバック用
+  // handleOpenClick();
+})
+
+/**
+ * Openボタンクリック時の処理
+ * - Openボタンを非表示にする
+ * - 5つの選択肢を円形に展開するアニメーションを実行する
+ */
+const handleOpenClick = () => {
+  showOpen.value = false // Openボタンを非表示
+
+  const radius = 200 // 円形配置の半径（中心からの距離）
+  // const angleIncrement = (Math.PI * 2) / itemList.length // 各選択肢の間隔（角度）
+  const angleIncrement = (Math.PI * 2) / 8
+
+  // 真上に配置される位置を調整
+  // - Math.PI / 2 は12時の方向（上）を基準
+  const angleOffset = -Math.PI / 2 - angleIncrement * 2 // 2つ分の角度をオフセット 
+
+  const centerX = window.innerWidth / 2 // 画面中央のX座標
+  const centerY = window.innerHeight / 2 // 画面中央のY座標
+
+  // 各選択肢の位置を計算し、アニメーションを実行　circleRefsで取得した要素をループ
+  circleRefs.forEach((el, i) => {
+    // 各選択肢の角度（位置）を計算
+    const angle = i * angleIncrement + angleOffset
+    const x = Math.cos(angle) * radius // X座標の計算
+    const y = Math.sin(angle) * radius // Y座標の計算
+
+    // GSAPを使用したアニメーション
+    gsap.fromTo(
+      el, // アニメーション対象の要素
+      {
+        x: 0, // 初期位置X（中央）
+        y: 0, // 初期位置Y（中央）
+        opacity: 0, // 初期状態：透明
+        scale: 0.5, // 初期状態：縮小
+      },
+      {
+        x, // 計算した位置へ移動
+        y, // 計算した位置へ移動
+        opacity: 1, // 完全に表示
+        scale: 1, // 通常のサイズに戻す
+        duration: 0.8, // アニメーション時間
+        ease: 'back.out(1.7)', // イージング（少し跳ねるような動き）
+        delay: i * 0.05, // 各選択肢が少しずつアニメーション開始
+      }
+    )
+  })
+}
+
+/**
+ * 各選択肢の円形ボタンクリック時の処理
+ * @param {string} item - クリックされた要素
+ */
+function onGo(value) {
   // Contactは未実装のため
-  if(item.value === 'contact') {
+  if(value === 'contact' || value === 'none-1' || value === 'none-2') {
     return;
   }
-  router.push(item.value);
+  router.push(value);
 }
 
-// 改行文字を変換
-function formatText(text) {
-  return text.split('\n');
+const onclickBasicOsuwari = () => {
+  console.log('Osuwari clicked!')
 }
 
-// カードの背景画像を取得
-function getCardStyle(index) {
-  // 対象カードの取得
-  const item = cardItemList[index];
-  // hoverStates.value[index] の値を使って、ホバー状態をチェック
-  // hoverStates.value[index] が true なら、ホバー時の画像（item.hoverImage）を使用
-  // それ以外の場合は通常の画像（item.image）を使用
-  const bgImage = hoverStates.value[index] ? item.hoverImage : item.image;
-  return {
-    backgroundImage: `url(${bgImage})`, // backgroundImage プロパティ
-    backgroundSize: 'cover',            // 画像をカード全体にフィットさせる
-    backgroundPosition: 'center',       // 画像の位置を中央に設定
-    transition: 'background-image 0.3s ease', // 背景画像の遷移を滑らかに行う
+// 監視
+// showOpenがfalseに変わったときにアニメーションを実行
+watch(showOpen, (newValue) => {
+  if (!newValue) {
+    gsap.fromTo(
+      slideInDiv.value,
+      { y: 100, opacity: 0 }, // 初期位置：下から100px、透明
+      { y: 0, opacity: 1, duration: 1, ease: "power2.out" } // 最終位置：通常の位置、1秒間でアニメーション
+    );
   }
-}
+});
 
 </script>
 
-<style>
-/* カード内のレイアウト調整 */
-.card-inner {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 10px;
+
+<style scoped>
+.home-container {
+  position: relative; /* 子要素の絶対配置の基準点 */
+  width: 100vw; /* ビューポート幅いっぱいに広がる */
+  height: calc(100vh - 48px); /* ツールバーを差し引いて、ビューポート高さいっぱいに広がる */
+  /* background: #f0f4f8; 薄い青灰色の背景 */
+  overflow: hidden; /* はみ出た部分を隠す */
+  display: flex; /* フレックスボックスレイアウト */
+  align-items: center; /* 縦方向中央揃え */
+  justify-content: center; /* 横方向中央揃え */
 }
-.button-container {
-  margin-top: auto;
-  padding-top: 16px;
+
+.circle {
+  position: absolute; /* 絶対配置 */
+  border-radius: 50%; /* 円形にする */
+  color: white; /* 白色のテキスト */
+  font-weight: bold; /* 太字テキスト */
+  display: flex; /* フレックスボックスレイアウト */
+  align-items: center; /* テキスト縦方向中央揃え */
+  justify-content: center; /* テキスト横方向中央揃え */
+  cursor: pointer; /* カーソルをポインターに変更してクリック可能なことを示す */
 }
-/* PC表示（md以上）での行の高さ固定 */
-@media (min-width: 960px) {
-  .card-row {
-    height: 300px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
-  .card-column {
-    height: 100%;
-  }
-  .card-content {
-    height: 100%;
-  }
+
+.open-circle {
+  z-index: 10; /* 他の要素より前面に表示 */
+  width: 250px; /* 円の幅 */
+  height: 250px; /* 円の高さ */
+  font-size: 20px; /* テキストサイズ */
+  background: #3498db; /* 背景の色 */
 }
-/* スマホ表示での調整 */
-@media (max-width: 959px) {
-  .card-content {
-    height: auto;
-    min-height: 250px; /* スマホでの最小高さ */
-    display: flex;
-    flex-direction: column;
-  }
-  .card-inner {
-    min-height: 250px; /* 最小高さ */
-    display: flex;
-    flex-direction: column;
-  }
+
+.option-circle {
+  opacity: 0; /* 初期状態では透明（非表示） */
+  pointer-events: auto; /* クリックイベントを有効化 */
+  width: 100px; /* 円の幅 */
+  height: 100px; /* 円の高さ */
+  background: #ff8bc3; /* 背景の色 */
 }
-/** ホバー時 */
+.option-circle:hover {
+  background: orange; /* ホバー時の背景色 */
+}
+
+.speech-bubble {
+  position: absolute;
+  top: 100%; /* ターゲット要素の下に表示 */
+  left: 50%;
+  transform: translateX(-50%);
+  background: grey;
+  color: #333;
+  padding: 12px;
+  width: 200px; /* 幅を1000pxに設定 */
+  max-width: 100%; /* 親要素の幅を超えないように設定（レスポンシブ対応） */
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+  line-height: 1.4;
+  z-index: 10;
+  white-space: normal;
+}
+
+/* 吹き出しの矢印（上に向けて表示） */
+.speech-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: 100%; /* 吹き出しの上に矢印 */
+  left: 50%;
+  transform: translateX(-50%);
+  border: 8px solid transparent;
+  border-bottom-color: grey; /* 上に向けるために bottom に色をつける */
+}
+
 </style>
