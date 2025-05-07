@@ -14,6 +14,11 @@ const routes = [
     component: PawLayout,
     children: [
       {
+        path: '/welcome',
+        name: 'welcome',
+        component: () => import('@/page/WelcomePage.vue')
+      },
+      {
         path: '/home',
         name: 'home',
         component: () => import('@/page/HomePage.vue')

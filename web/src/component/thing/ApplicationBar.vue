@@ -1,5 +1,6 @@
 <template>
   <v-app-bar
+    app
     :elevation="2" color="primary" density="compact">
     <template v-slot:append>
       <v-app-bar-nav-icon

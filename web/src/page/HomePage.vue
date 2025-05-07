@@ -1,27 +1,8 @@
 <template>
-  <!-- wellcome -->
-  <v-row dense v-if="showOpen">
-    <v-col cols="12">
-      <v-card color="green" variant="outlined">
-        <v-card-title :class="titleClass">Welcome to my portfolio!</v-card-title>
-        <v-card-text :class="textClass">
-          <p>Here, you’ll find an introduction to who I am as a developer, the projects I’ve built, and the journey I’m on—with a little help from my loyal assistant, Mugi the dog.</p>
-          <p>Whether you’re sniffing around out of curiosity or scouting for talent, I hope you enjoy exploring this space!</p>
-          <p>So, first things first — call your buddy with a sweet potato!</p>
-        </v-card-text>
-      </v-card>
-    </v-col>
-    <v-col cols="12">
-      <div v-if="showOpen">
-        <CoreButton label="Come here, Mugi!" @click="handleOpenClick" />
-      </div>
-    </v-col>
-  </v-row>
-
   <div class="home-container">
-    <div v-show="!showOpen" ref="slideInDiv"
-      class="slide-in"
-      style="width: 200px; height: auto;">
+    <div
+      ref="slideInDiv"
+      class="circle">
       <BasicOsuwari @on-click="onclickBasicOsuwari" />
       <!-- 吹き出し -->
       <div class="speech-bubble">
@@ -31,7 +12,7 @@
 
     <!-- 円形に配置される選択肢 -->
     <div class="circle option-circle"
-      v-for="(item, index) in itemList"
+      v-for="(item, index) in filteredItems"
       :key="item.value"
       :ref="el => circleRefs[index] = el"
       @click="onGo(item.value)"
@@ -45,21 +26,20 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useDisplay } from 'vuetify'
 import { gsap } from 'gsap'
 import { useRouter } from 'vue-router'
 import BasicOsuwari from '@/component/thing/BasicOsuwari.vue'
-import CoreButton from '@/component/thing/CoreButton.vue'
 
 /** ルーター */
 const router = useRouter()
 
 // 状態管理
-const showOpen = ref(true) // Openボタンの表示状態を管理するリアクティブな変数
 const slideInDiv = ref(null);
 const circleRefs = [] // 各円形ボタンの要素参照を格納する配列
 
-const speechBubbleText = ref('Need me? Let me know what you’d like to check out!')
+const speechBubbleText = ref('Hello! I’ll guide you.')
 const itemList = [
   {
     value: 'none',
@@ -89,26 +69,49 @@ const itemList = [
   },
 ];
 
+// Vuetifyのレスポンシブ情報を取得
+const { mobile } = useDisplay()
+// スマホ画面では一部アイテムを除外
+const filteredItems = computed(() =>
+mobile.value
+    ? itemList.filter(item => item.value !== 'none' && item.value !== 'logout')
+    : itemList
+)
+
 onMounted(() => {
-  // デバック用
-  // handleOpenClick();
+  spreadMenu();
+  slideInCharacter();
 })
 
 /**
- * Openボタンクリック時の処理
- * - Openボタンを非表示にする
- * - 5つの選択肢を円形に展開するアニメーションを実行する
+ * キャラを下から表示するアニメーション
  */
-const handleOpenClick = () => {
-  showOpen.value = false // Openボタンを非表示
+function slideInCharacter() {
+  gsap.fromTo(
+    slideInDiv.value,
+    { y: 100, opacity: 0 }, // 初期位置：下から100px、透明
+    { y: 0, opacity: 1, duration: 1, ease: "power2.out" } // 最終位置：通常の位置、1秒間でアニメーション
+  );
+}
 
-  const radius = 200 // 円形配置の半径（中心からの距離）
+/**
+ * 5つの選択肢を円形に展開するアニメーション
+ */
+function spreadMenu() {
+
+  const radius = 180 // 円形配置の半径（中心からの距離）
   // const angleIncrement = (Math.PI * 2) / itemList.length // 各選択肢の間隔（角度）
   const angleIncrement = (Math.PI * 2) / 8
 
-  // 真上に配置される位置を調整
+  // 真上に配置されるサークルを調整
   // - Math.PI / 2 は12時の方向（上）を基準
-  const angleOffset = -Math.PI / 2 - angleIncrement * 2 // 2つ分の角度をオフセット 
+  let angleOffset;
+  if (!mobile.value) {
+    angleOffset = -Math.PI / 2 - angleIncrement * 2 // PCは丸が5個なので、2つ分の角度をオフセット 
+    
+  } else {
+    angleOffset = -Math.PI / 2 - angleIncrement // PCは丸が3個なので、そのまま12時の方向 
+  }
 
   const centerX = window.innerWidth / 2 // 画面中央のX座標
   const centerY = window.innerHeight / 2 // 画面中央のY座標
@@ -143,7 +146,7 @@ const handleOpenClick = () => {
 }
 
 /**
- * 各選択肢の円形ボタンクリック時の処理
+ * 各選択肢の円形ボタンクリック時
  * @param {string} item - クリックされた要素
  */
 function onGo(value) {
@@ -158,28 +161,16 @@ const onclickBasicOsuwari = () => {
   console.log('Osuwari clicked!')
 }
 
-// 監視
-// showOpenがfalseに変わったときにアニメーションを実行
-watch(showOpen, (newValue) => {
-  if (!newValue) {
-    gsap.fromTo(
-      slideInDiv.value,
-      { y: 100, opacity: 0 }, // 初期位置：下から100px、透明
-      { y: 0, opacity: 1, duration: 1, ease: "power2.out" } // 最終位置：通常の位置、1秒間でアニメーション
-    );
-  }
-});
-
 </script>
 
 
 <style scoped>
 .home-container {
   position: relative; /* 子要素の絶対配置の基準点 */
-  width: 100vw; /* ビューポート幅いっぱいに広がる */
-  height: calc(100vh - 48px); /* ツールバーを差し引いて、ビューポート高さいっぱいに広がる */
-  /* background: #f0f4f8; 薄い青灰色の背景 */
-  overflow: hidden; /* はみ出た部分を隠す */
+  width: 100%; /* ビューポート幅いっぱいに広がる */
+  height: 100%; /* ツールバーを差し引いて、ビューポート高さいっぱいに広がる */
+  /* background: #f0f4f8;  */
+  /* overflow: hidden; はみ出た部分を隠す */
   display: flex; /* フレックスボックスレイアウト */
   align-items: center; /* 縦方向中央揃え */
   justify-content: center; /* 横方向中央揃え */
@@ -187,21 +178,10 @@ watch(showOpen, (newValue) => {
 
 .circle {
   position: absolute; /* 絶対配置 */
-  border-radius: 50%; /* 円形にする */
-  color: white; /* 白色のテキスト */
-  font-weight: bold; /* 太字テキスト */
   display: flex; /* フレックスボックスレイアウト */
-  align-items: center; /* テキスト縦方向中央揃え */
-  justify-content: center; /* テキスト横方向中央揃え */
   cursor: pointer; /* カーソルをポインターに変更してクリック可能なことを示す */
-}
-
-.open-circle {
-  z-index: 10; /* 他の要素より前面に表示 */
-  width: 250px; /* 円の幅 */
-  height: 250px; /* 円の高さ */
-  font-size: 20px; /* テキストサイズ */
-  background: #3498db; /* 背景の色 */
+  width: 200px;
+  height: auto;
 }
 
 .option-circle {
@@ -210,6 +190,11 @@ watch(showOpen, (newValue) => {
   width: 100px; /* 円の幅 */
   height: 100px; /* 円の高さ */
   background: #ff8bc3; /* 背景の色 */
+  border-radius: 50%; /* 円形にする */
+  color: white; /* 白色のテキスト */
+  font-weight: bold; /* 太字テキスト */
+  align-items: center; /* テキスト縦方向中央揃え */
+  justify-content: center; /* テキスト横方向中央揃え */
 }
 .option-circle:hover {
   background: orange; /* ホバー時の背景色 */
@@ -220,8 +205,8 @@ watch(showOpen, (newValue) => {
   top: 100%; /* ターゲット要素の下に表示 */
   left: 50%;
   transform: translateX(-50%);
-  background: grey;
-  color: #333;
+  background: #8B5E3C;
+  color: #FFF;
   padding: 12px;
   width: 200px; /* 幅を1000pxに設定 */
   max-width: 100%; /* 親要素の幅を超えないように設定（レスポンシブ対応） */
@@ -241,7 +226,7 @@ watch(showOpen, (newValue) => {
   left: 50%;
   transform: translateX(-50%);
   border: 8px solid transparent;
-  border-bottom-color: grey; /* 上に向けるために bottom に色をつける */
+  border-bottom-color: #8B5E3C; /* 上に向けるために bottom に色をつける */
 }
 
 </style>
