@@ -10,8 +10,10 @@
   </v-app-bar>
 
   <!-- サイドメニュー（TO DO：背景画像を設定する） -->
-  <v-navigation-drawer temporary
-    v-model="isDrawer" location="end">
+  <v-navigation-drawer
+    temporary
+    v-model="isDrawer"
+    :location="$vuetify.display.smAndDown ? 'top' : 'end'">
     <!-- アイコン -->
     <v-list-item
       lines="two"
