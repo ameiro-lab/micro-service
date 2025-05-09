@@ -41,6 +41,7 @@
         <template v-else>
           <v-card-title class="mb-3">
             {{ t('aboutme.tech') }}
+            <span class="text-medium-emphasis text-subtitle-2">{{ t('aboutme.tech.lastmodi') }}</span>
           </v-card-title>
           <v-card-text>
             <v-row no-gutters class="mb-1"

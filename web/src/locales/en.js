@@ -40,10 +40,10 @@ export default {
     \nWhile enterprise systems often prioritize processing efficiency, \
     I enjoy adding playful touches to UI design and animations. \
     I strive to create user experiences that can brighten someone\'s day, \even just a little. \
-    To make that possible, I approach my work with a sense of fun and curiosity every day.'
-,
+    To make that possible, I approach my work with a sense of fun and curiosity every day.',
 
   'aboutme.tech' : 'My Skillset',
+  'aboutme.tech.lastmodi' : 'Last Modified: May 1, 2025',
   'aboutme.tech.fe' : 'Frontend',
   'aboutme.tech.arch' : 'Architecture',
   'aboutme.tech.infra' : 'Infrastructure',
