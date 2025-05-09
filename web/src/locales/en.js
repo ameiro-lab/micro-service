@@ -1,24 +1,19 @@
 export default {
-  login: {
-    title: 'Ready to Paw In?',
-    username: 'User Name',
-    password: 'Password',
-  },
+  // login
+  'login.title': 'Ready to Paw In?',
+  'login.username': 'User Name',
+  'login.password': 'Password',
 
-  welcome: {
+  // welcome
 
-  },
+  // home
 
-  home: {
+  // aboutme
 
-  },
+  // works
 
-  aboutme: {
-
-  },
-
-  works: {
-
-  },
+  // message
+    'message.ERR-API-001': 'ワン！応答がこないワン！サーバーが寝てるかもね',
+    'message.ERR-LOGIN-001': 'Uh-oh... We can\'t find your pawprint.',
   
 }
