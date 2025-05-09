@@ -3,9 +3,17 @@
     v-model="mode"
     color="green"
     rounded="0"
-    group>
-    <v-btn value="en">English</v-btn>
-    <v-btn value="ja">日本語</v-btn>
+    group
+  >
+    <v-btn
+      value="en"
+      :disabled="mode === 'en'"
+    >English</v-btn>
+
+    <v-btn
+      value="ja"
+      :disabled="mode === 'ja'"
+    >日本語</v-btn>
   </v-btn-toggle>
 </template>
 
@@ -13,12 +21,17 @@
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-const { t, locale } = useI18n()
-const mode = ref(localStorage.getItem('lang') || 'ja') // 初期値をローカルストレージから取得
+const { locale } = useI18n()
 
-// 言語が変わったら i18n に反映し、保存もする
+const mode = ref(localStorage.getItem('lang') || 'ja')
+
+// 言語が変わったら反映＆保存
 watch(mode, (newLang) => {
-  locale.value = newLang
-  localStorage.setItem('lang', newLang)
+  if (['ja', 'en'].includes(newLang)) {
+    locale.value = newLang
+    localStorage.setItem('lang', newLang)
+  } else {
+    console.warn('言語変換エラー:', newLang)
+  }
 })
 </script>
