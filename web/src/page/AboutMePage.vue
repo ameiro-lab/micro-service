@@ -1,414 +1,403 @@
 <template>
-  <v-row align="stretch" justify="start">
-    <!-- プロフィールカード -->
-    <v-col cols="12" md="7">
-      <v-card color="base" style="height: 100%;">
-        <v-row align="center" no-gutters class="pb-4 mb-4">
-          <v-col cols="auto">
-            <v-avatar size="80" class="shadow-4">
-              <img src="https://github.com/ameiro-lab.png" alt="Your Avatar" class="fit-image" />
-            </v-avatar>
-          </v-col>
-          <v-col class="pl-4">
-            <div class="text-h5 font-weight-bold">xxx xxx</div>
-            <div class="text-body-2 text-grey">Web Engineer / Since 2022</div>
-          </v-col>
-        </v-row>
-        <!-- 自己紹介 -->
-        <section class="mb-6">
-          <v-card-title>Profile</v-card-title>
-          <v-card-text>
-            <p>東京を拠点に活動しているWebエンジニアです。</p>
-            <p>社会人としての第一歩は事務職でしたが、モノづくりへの興味から2022年にJavaを学び始めました。
-            現在の担当は、業務システムのフロントエンド開発です。業務システムといえば、効率や機能を重視することが多い一方で、そのような中でもUIやアニメーションに遊び心を加えることを大切にしています。
-            ユーザーが日々使うたびに明るい気持ちになるような、ユニークな提案ができるエンジニアを目指しています。</p>
-          </v-card-text>
-        </section>
-      </v-card>
-    </v-col>
+<v-row align="stretch" justify="start">
+  <!-- プロフィールカード -->
+  <v-col cols="12" md="7">
+    <v-card color="base" style="height: 100%;">
+      <v-row align="center" no-gutters class="pb-4 mb-4">
+        <v-col cols="auto">
+          <v-avatar size="80" class="shadow-4">
+            <img src="https://github.com/ameiro-lab.png" alt="Your Avatar" class="fit-image" />
+          </v-avatar>
+        </v-col>
+        <v-col class="pl-4">
+          <div class="text-h5 font-weight-bold">xxx xxx</div>
+          <div class="text-body-2 text-grey">Web Engineer / Since 2022</div>
+        </v-col>
+      </v-row>
+      <!-- 自己紹介 -->
+      <section class="mb-6">
+        <v-card-title>{{ t('aboutme.profile') }}</v-card-title>
+        <v-card-text>
+          <span
+            v-for="(line, index) in profileText"
+            :key="index"
+            class="formatted-line">
+            {{ line }}<br />
+          </span>
+        </v-card-text>
+      </section>
+    </v-card>
+  </v-col>
 
-    <!-- レーダーチャートカード -->
-    <v-col cols="12" md="5">
-      <v-card
-        style="height: 100%;"
-        @mouseenter="isRadarHovered = true"
-        @mouseleave="isRadarHovered = false">
-        <template v-if="!isRadarHovered">
-          <Radar :data="data" :options="options" />
-        </template>
-        <template v-else>
-          <v-card-title class="text-h6 mb-2">
-            My Skillset
-          </v-card-title>
-          <v-card-text>
-            <v-row no-gutters
-              v-for="(item, index) in stackList" :key="index">
-              <v-col cols="1" />
-              <v-col cols="9" class="mb-1">
-                <strong>{{ item.label }}</strong>:　{{ getDescription(item.label) }}
-              </v-col>
-              <v-col>
-                <v-icon v-if="item.value >= 60"
-                  color="primary" size="x-large">mdi-check-circle</v-icon>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </template>
-      </v-card>
-    </v-col>
-
-    <!-- 資格 -->
-    <v-col cols="12" md="12">
-      <v-card >
-        <v-card-title class="text-h6 mb-2">
-          Qualification
+  <!-- レーダーチャートカード -->
+  <v-col cols="12" md="5">
+    <v-card
+      style="height: 100%;"
+      @mouseenter="isRadarHovered = true"
+      @mouseleave="isRadarHovered = false">
+      <template v-if="!isRadarHovered">
+        <Radar :data="data" :options="options" />
+      </template>
+      <template v-else>
+        <v-card-title class="mb-3">
+          {{ t('aboutme.tech') }}
         </v-card-title>
         <v-card-text>
-          <v-row
-            class="mb-2 pl-3" no-gutters
-            v-for="item in qualificationList" :key="item.name">
-            <v-col cols="12">
-              <v-chip color="primary" variant="outlined" size="small">
-                {{ item.name }}
-              </v-chip>
+          <v-row no-gutters class="mb-1"
+            v-for="(item, index) in stackList" :key="label">
+            <v-col cols="1" />
+            <v-col cols="5" class="mb-1">
+              <strong>
+                {{ item.label }}
+              </strong>
+            </v-col>
+            <v-col class="text-center">
+              {{ item.value }}%
+            </v-col>
+            <v-col cols="1">
+              <v-icon v-if="item.value >= 80"
+                color="primary" size="small">mdi-check-circle</v-icon>
             </v-col>
           </v-row>
         </v-card-text>
-      </v-card>
-    </v-col>
-
-    <!-- 経歴 -->
-    <v-col cols="12" md="12">
-      <v-card >
-      <v-card-title class="text-h6 mb-2">
-        Projects
-      </v-card-title>
-      
-      <!-- スマホ版 -->
-      <div v-if="$vuetify.display.smAndDown">
-        <v-expansion-panels multiple>
-          <v-expansion-panel
-            v-for="(project, index) in projectList"
-            :key="project.title">
-            <v-expansion-panel-title>
-              {{ project.title }}
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-              <!-- 期間 -->
-              <v-row no-gutters class="mb-2">
-                <v-col cols="3">
-                  Period:
-                </v-col>
-                <v-col>
-                  {{ project.period }}
-                </v-col>
-              </v-row>
-              <!-- 顧客 -->
-              <v-row no-gutters class="mb-2">
-                <v-col cols="3">
-                  Client:
-                </v-col>
-                <v-col>
-                  {{ project.client }}
-                </v-col>
-              </v-row>
-              <!-- 役割 -->
-              <v-row no-gutters class="mb-2">
-                <v-col cols="3">
-                  Role:
-                </v-col>
-                <v-col>
-                  {{ project.role }}
-                </v-col>
-              </v-row>
-              <!-- 役割 -->
-              <v-row no-gutters class="mb-2">
-                <v-col cols="3">
-                  Role:
-                </v-col>
-                <v-col>
-                  {{ project.role }}
-                  <p>{{ project.description }}</p>
-                </v-col>
-              </v-row>
-              <!-- 技術スタック -->
-              <v-row no-gutters class="mb-2">
-                <v-col>
-                  Tech Stack:
-                </v-col>
-                <v-chip-group column>
-                  <v-chip
-                    v-for="tech in project.techList"
-                    :key="tech"
-                    color="primary"
-                    variant="outlined"
-                    size="small">
-                    {{ tech }}
-                  </v-chip>
-                </v-chip-group>
-              </v-row>
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-expansion-panels>
-      </div>
-
-      <!-- PC版 -->
-      <div v-else>
-        <v-timeline align="start" side="end" line-color="primary">
-          <v-timeline-item
-            v-for="(project, index) in projectList"
-            :key="index"
-            :dot-color="'primary'"
-            :icon="'mdi-briefcase-outline'">
-            <template #opposite>
-              <div class="text-caption text-grey-darken-1">{{ project.period }}</div>
-            </template>
-  
-            <v-card elevation="2" class="pa-4">
-              <v-card-title class="text-h6">{{ project.title }}</v-card-title>
-              <v-card-subtitle class="text-subtitle-2">
-                {{ project.client }} — {{ project.role }}
-              </v-card-subtitle>
-              <v-card-text class="mt-2">
-                <p>{{ project.description }}</p>
-                <v-chip-group column class="mt-3" tag="div">
-                  <v-chip
-                    v-for="tech in project.techList"
-                    :key="tech"
-                    class="ma-1"
-                    size="small"
-                    color="primary"
-                    variant="outlined">
-                    {{ tech }}
-                  </v-chip>
-                </v-chip-group>
-              </v-card-text>
-            </v-card>
-          </v-timeline-item>
-        </v-timeline>
-      </div>
+      </template>
     </v-card>
-    </v-col>
-  </v-row>
-  
-  <!-- キャラクター -->
-  <div style="width: 200px; height: auto;">
-    <BasicOsuwari @on-click="onclickBasicOsuwari" />
-    <VectorTest />
-  </div>
+  </v-col>
+
+  <!-- 資格 -->
+  <v-col cols="12" md="12">
+    <v-card >
+      <v-card-title class="text-h6 mb-2">
+        {{ t('aboutme.qualification') }}
+      </v-card-title>
+      <v-card-text>
+        <v-row
+          class="mb-2 pl-3" no-gutters
+          v-for="item in qualificationList" :key="item.name">
+          <v-col cols="12">
+            <v-chip color="primary" variant="outlined" size="small">
+              {{ item.name }}
+            </v-chip>
+          </v-col>
+        </v-row>
+      </v-card-text>
+    </v-card>
+  </v-col>
+
+  <!-- 経歴 -->
+  <v-col cols="12" md="12">
+    <v-card >
+    <v-card-title class="text-h6 mb-2">
+      {{ t('aboutme.projects') }}
+    </v-card-title>
     
-  </template>
+    <!-- スマホ版 -->
+    <div v-if="$vuetify.display.smAndDown">
+      <v-expansion-panels multiple>
+        <v-expansion-panel
+          v-for="(project, index) in projectList"
+          :key="project.title">
+          <v-expansion-panel-title>
+            {{ project.title }}
+          </v-expansion-panel-title>
+          <v-expansion-panel-text>
+            <!-- 期間 -->
+            <v-row no-gutters class="mb-2 text-medium-emphasis">
+              <v-col cols="2">
+                Period:
+              </v-col>
+              <v-col>
+                {{ project.period }}
+              </v-col>
+            </v-row>
+            <!-- 顧客 -->
+            <v-row no-gutters class="mb-2 text-medium-emphasis">
+              <v-col cols="2">
+                Client:
+              </v-col>
+              <v-col>
+                {{ project.client }}
+              </v-col>
+            </v-row>
+            <!-- 役割 -->
+            <v-row no-gutters class="mb-2 text-medium-emphasis">
+              <v-col cols="2">
+                Role:
+              </v-col>
+              <v-col>
+                {{ project.role }}
+              </v-col>
+            </v-row>
+            <!-- 詳細
+            <v-row no-gutters class="mb-2">
+              {{ project.description }}
+            </v-row> -->
+            <!-- 技術スタック -->
+            <v-row no-gutters class="mb-2">
+              <v-chip-group column>
+                <v-chip
+                  v-for="tech in project.techList"
+                  :key="tech"
+                  color="primary"
+                  variant="outlined"
+                  size="small">
+                  {{ tech }}
+                </v-chip>
+              </v-chip-group>
+            </v-row>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-expansion-panels>
+    </div>
+
+    <!-- PC版 -->
+    <div v-else>
+      <v-timeline
+      class="pb-5 px-5"
+        align="start" side="end" line-color="primary"
+        truncate-line="end">
+        <v-timeline-item
+          v-for="(project, index) in projectList"
+          :key="index"
+          :dot-color="'primary'"
+          :icon="'mdi-briefcase-outline'">
+          <template #opposite>
+            <div class="text-caption text-grey-darken-1">{{ project.period }}</div>
+          </template>
+
+          <v-card>
+            <v-card-title class="text-h6 bg-primary">{{ project.title }}</v-card-title>
+            <v-card-subtitle class="pt-4">
+              {{ project.client }} — {{ project.role }}
+            </v-card-subtitle>
+            <v-card-text>
+              <p>{{ project.description }}</p>
+              <v-chip-group column class="mt-3" tag="div">
+                <v-chip
+                  v-for="tech in project.techList"
+                  :key="tech"
+                  class="ma-1"
+                  size="small"
+                  color="primary"
+                  variant="outlined">
+                  {{ tech }}
+                </v-chip>
+              </v-chip-group>
+            </v-card-text>
+          </v-card>
+        </v-timeline-item>
+      </v-timeline>
+    </div>
+  </v-card>
+  </v-col>
+</v-row>
+
+<!-- キャラクター -->
+<div style="width: 200px; height: auto;">
+  <BasicOsuwari @on-click="onclickBasicOsuwari" />
+  <VectorTest />
+</div>
   
-  <script setup>
-  import { ref, computed } from 'vue'
-  import { useDisplay } from 'vuetify'
-  import BasicOsuwari from '@/component/thing/BasicOsuwari.vue'
-  import VectorTest from '@/component/thing/VectorTest.vue'
-  
-  // Vuetifyの画面サイズ情報を取得（useDisplayはVuetifyが提供するComposable）
-  const { mobile } = useDisplay()
-  
-  // 共通データ
-  const md = 6;
-  const titleClass = 'text-h5 font-weight-bold'
-  const textClass = 'text-body-1'
-  
-  const isRadarHovered = ref(false)  // ホバー状態を管理
-  
-  import {
-    Chart as ChartJS,
-    RadialLinearScale,
-    PointElement,
-    LineElement,
-    Filler,
-    Tooltip,
-    Legend
-  } from 'chart.js'
-  import { Radar } from 'vue-chartjs'
-  
-  ChartJS.register(
-    RadialLinearScale,
-    PointElement,
-    LineElement,
-    Filler,
-    Tooltip,
-    Legend
-  )
-  
-  /** Chart.js */
-  // スタックリスト
-  const stackList = [
-    { label: 'Frontend', text: 'Vue.js(JS/TS), HTML/CSS', value: 82 },
-    { label: 'Architecture', text: 'DDD, Clean Architecture', value: 28 },
-    { label: 'Infrastructure', text: 'Docker, AWS×', value: 32 },
-    { label: 'Database', text: 'PostgreSQL', value: 42 },
-    { label: 'Backend', text: 'SpringBoot(Java), Golang, Node.js(JS/TS)', value: 56 },
-    { label: 'Testing', text: 'JUnit, Jest×', value: 52 },
-    { label: 'Productivity', text: 'Git, VSCode, Eclipse', value: 60 },
-  ];
-  // 表示するデータ
-  const data = {
-    labels: stackList.map(item => item.label),
-    datasets: [
-      {
-        label: 'Tech Stack',
-        // backgroundColor: 'rgba(255, 205, 86, 0.2)',          // やさしい黄色の透明塗り
-        // borderColor: 'rgba(255, 205, 86, 1)',                // 線は明るく引き締める黄色
-        // pointBackgroundColor: 'rgba(255, 205, 86, 1)',       // 各点も同じ黄色で統一感
-        // pointBorderColor: '#fff',                            // 白で際立たせる
-        // pointHoverBackgroundColor: '#fff',                   // ホバー時は白でふんわり
-        // pointHoverBorderColor: 'rgba(255, 205, 86, 1)',      // ホバー外枠は黄色で明るく
-        backgroundColor: 'rgba(218, 165, 105, 0.2)',          // 背景は麦色をイメージした淡い茶色
-        borderColor: 'rgba(218, 165, 105, 1)',                // 枠線も同系色で落ち着きのある印象に
-        pointBackgroundColor: 'rgba(218, 165, 105, 1)',       // 点も同じカラーで統一感
-        pointBorderColor: '#fff',                             // 白い枠でくっきり感をプラス
-        pointHoverBackgroundColor: '#fff',                    // ホバー時は白でやわらかく
-        pointHoverBorderColor: 'rgba(218, 165, 105, 1)',      // ホバー外枠は同じ色で統一
-        data: stackList.map(item => item.value),
+</template>
+
+<script setup>
+import { ref, computed } from 'vue'
+import { useDisplay } from 'vuetify'
+import { useI18n } from 'vue-i18n'
+import BasicOsuwari from '@/component/thing/BasicOsuwari.vue'
+import VectorTest from '@/component/thing/VectorTest.vue'
+
+/** plugins */
+const { t, locale } = useI18n()
+const { mobile } = useDisplay() // Vuetifyの画面サイズ情報を取得
+
+// 共通データ
+const md = 6;
+const titleClass = 'text-h5 font-weight-bold'
+const textClass = 'text-body-1'
+const isRadarHovered = ref(false)  // ホバー状態を管理
+
+// i18nでメッセージを取得し、改行を処理
+const profileText = ref(formatText(t('aboutme.profile.text')))
+
+import {
+  Chart as ChartJS,
+  RadialLinearScale,
+  PointElement,
+  LineElement,
+  Filler,
+  Tooltip,
+  Legend
+} from 'chart.js'
+import { Radar } from 'vue-chartjs'
+
+ChartJS.register(
+  RadialLinearScale,
+  PointElement,
+  LineElement,
+  Filler,
+  Tooltip,
+  Legend
+)
+
+/** Chart.js */
+// スタックリスト
+const stackList = [
+  { label: t('aboutme.tech.fe'), text: 'Vue.js(JS/TS), HTML/CSS', value: 82 },
+  { label: t('aboutme.tech.arch'), text: 'DDD, Clean Architecture', value: 28 },
+  { label: t('aboutme.tech.infra'), text: 'Docker, AWS×', value: 32 },
+  { label: t('aboutme.tech.db'), text: 'PostgreSQL', value: 42 },
+  { label: t('aboutme.tech.be'), text: 'SpringBoot(Java), Golang, Node.js(JS/TS)', value: 56 },
+  { label: t('aboutme.tech.test'), text: 'JUnit, Jest×', value: 52 },
+  { label: t('aboutme.tech.tools'), text: 'Git, VSCode, Eclipse', value: 60 },
+];
+
+// 表示するデータ
+const data = {
+  labels: stackList.map(item => item.label),
+  datasets: [
+    {
+      label: 'Tech Stack',
+      // backgroundColor: 'rgba(255, 205, 86, 0.2)',          // やさしい黄色の透明塗り
+      // borderColor: 'rgba(255, 205, 86, 1)',                // 線は明るく引き締める黄色
+      // pointBackgroundColor: 'rgba(255, 205, 86, 1)',       // 各点も同じ黄色で統一感
+      // pointBorderColor: '#fff',                            // 白で際立たせる
+      // pointHoverBackgroundColor: '#fff',                   // ホバー時は白でふんわり
+      // pointHoverBorderColor: 'rgba(255, 205, 86, 1)',      // ホバー外枠は黄色で明るく
+      backgroundColor: 'rgba(218, 165, 105, 0.2)',          // 背景は麦色をイメージした淡い茶色
+      borderColor: 'rgba(218, 165, 105, 1)',                // 枠線も同系色で落ち着きのある印象に
+      pointBackgroundColor: 'rgba(218, 165, 105, 1)',       // 点も同じカラーで統一感
+      pointBorderColor: '#fff',                             // 白い枠でくっきり感をプラス
+      pointHoverBackgroundColor: '#fff',                    // ホバー時は白でやわらかく
+      pointHoverBorderColor: 'rgba(218, 165, 105, 1)',      // ホバー外枠は同じ色で統一
+      data: stackList.map(item => item.value),
+    },
+  ]
+}
+
+// オプション設定（必要に応じてカスタマイズ）
+const options = {
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    r: {
+      min: 0,
+      max: 100,
+      ticks: {
+        stepSize: 20, // お好みで調整可能（10, 25 などもOK）
+        color: 'grey' // 数値の色
       },
+      grid: {
+        // color: 'orange',
+      },
+      pointLabels: {
+        color: 'black', // 項目テキストの色
+      },
+    },
+  },
+  // ツールチップの設定
+  plugins: {
+    tooltip: {
+      callbacks: {
+        label: function (context) {
+          const label = context.label;
+          const match = stackList.find(item => item.label === label);
+          return match ? `${match.text}` : label;
+        },
+      },
+      backgroundColor: 'rgba(255, 255, 255, 0.9)', // 背景色（任意）
+      titleColor: '#000',  // タイトルの色
+      bodyColor: '#333',   // 本文の色
+      borderColor: '#ccc', // 枠線の色
+      borderWidth: 1,
+      titleFont: { weight: 'bold' }, // フォント太さなども設定可能
+    },
+  },
+}
+
+// 資格リスト
+const qualificationList = [
+  { name: 'Oracle Certified Java Programmer, Silver SE 1', date: '2024年4月' },
+  // { name: '秘書技能検定準１級', date: '2017年2月' },
+  // { name: 'ビジネス能力検定3級', date: '2017年2月' }
+];
+
+// プロジェクトリスト（SES）
+const projectList = [
+  {
+    title: t('aboutme.project1.title'),
+    period: 'Jul 2024 - now',
+    client: t('aboutme.project1.client'),
+    role: t('aboutme.project1.role'),
+    description: t('aboutme.project1.description'),
+    techList: [
+      'Java (JDK21)',
+      'Spring Boot (3.3.2)',
+      'MyBatis',
+      'PostgreSQL',
+      'Vue.js',
+      'JavaScript (Vuetify)',
+      'Node.js',
+      'Docker',
+      'Git'
+    ]
+  },
+  {
+    title: t('aboutme.project2.title'),
+    period: 'May 2023 - Jun 2024',
+    client: t('aboutme.project2.client'),
+    role: t('aboutme.project2.role'),
+    description: t('aboutme.project2.description'),
+    techList: [
+      'Java (JDK8)',
+      'Spring Boot',
+      'Spring Data JPA',
+      'Oracle',
+      'Vue.js',
+      'React',
+      'JavaScript (Vuetify, Material UI)',
+      'AWS',
+      'Jenkins',
+      'Git'
+    ]
+  },
+  {
+    title: t('aboutme.project3.title'),
+    period: 'Nov 2022 - Apr 2023',
+    client: t('aboutme.project3.client'),
+    role: t('aboutme.project3.role'),
+    description: t('aboutme.project3.description'),
+    techList: [
+      'Java',
+      'Spring',
+      'MyBatis',
+      'PostgreSQL',
+      'AWS (CodeCommit)',
+      'Thymeleaf',
+      'Git'
     ]
   }
-  
-  // オプション設定（必要に応じてカスタマイズ）
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      r: {
-        min: 0,
-        max: 100,
-        ticks: {
-          stepSize: 20, // お好みで調整可能（10, 25 などもOK）
-          color: 'grey' // 数値の色
-        },
-        grid: {
-          // color: 'orange',
-        },
-        pointLabels: {
-          color: 'black', // 項目テキストの色
-        },
-      },
-    },
-    // ツールチップの設定
-    plugins: {
-      tooltip: {
-        callbacks: {
-          label: function (context) {
-            const label = context.label;
-            const match = stackList.find(item => item.label === label);
-            return match ? `${match.text}` : label;
-          },
-        },
-        backgroundColor: 'rgba(255, 255, 255, 0.9)', // 背景色（任意）
-        titleColor: '#000',  // タイトルの色
-        bodyColor: '#333',   // 本文の色
-        borderColor: '#ccc', // 枠線の色
-        borderWidth: 1,
-        titleFont: { weight: 'bold' }, // フォント太さなども設定可能
-      },
-    },
-  }
-  
-  // 資格リスト
-  const qualificationList = [
-    { name: 'Oracle Certified Java Programmer, Silver SE 1', date: '2024年4月' },
-    { name: '秘書技能検定準１級', date: '2017年2月' },
-    { name: 'ビジネス能力検定3級', date: '2017年2月' }
-  ];
-  
-  // プロジェクトリスト（SES）
-  const projectList = [
-    {
-      title: 'Product Test Management System',
-      period: 'Jul 2024 - now',
-      client: 'Semiconductor Manufacturing Company',
-      role: 'Group Member (Full-Stack Developer)',
-      description: 'Developing a web application to streamline product testing and improve data traceability.',
-      techList: [
-        'Java (JDK21)',
-        'Spring Boot (3.3.2)',
-        'MyBatis',
-        'PostgreSQL',
-        'Vue.js',
-        'JavaScript (Vuetify)',
-        'Node.js',
-        'Docker',
-        'Git'
-      ]
-    },
-    {
-      title: 'Batch Operation Management System',
-      period: 'May 2023 - Jun 2024',
-      client: 'Securities Company',
-      role: 'Group Member (Full-Stack Developer)',
-      description: 'Developed a portal system to replace Excel-based batch operation management in a test environment, improving efficiency and reducing costs.',
-      techList: [
-        'Java (JDK8)',
-        'Spring Boot',
-        'Spring Data JPA',
-        'Oracle',
-        'Vue.js',
-        'React',
-        'JavaScript (Vuetify, Material UI)',
-        'AWS',
-        'Jenkins',
-        'Git'
-      ]
-    },
-    {
-      title: 'Learning Management System (LMS)',
-      period: 'Nov 2022 - Apr 2023',
-      client: 'Educational Institution',
-      role: 'Group Member (Backend Developer)',
-      description: 'Developed a learning management system to support e-learning, focusing on backend performance and system architecture.',
-      techList: [
-        'Java',
-        'Spring',
-        'MyBatis',
-        'PostgreSQL',
-        'AWS (CodeCommit)',
-        'Thymeleaf',
-        'Git'
-      ]
-    }
-  ];
-  
-  
-  /** リアクティブデータの定義 */
-  
-  /** メソッドの定義 */
-  const onclickBasicOsuwari = () => {
-    console.log('Osuwari clicked!')
-  }
-  
-  // labelに応じた日本語の解説文を返すメソッド
-  function getDescription(label) {
-    switch (label) {
-      case 'Frontend':
-        return 'フロントエンド開発';
-      case 'Architecture':
-        return 'アーキテクチャ設計';
-      case 'Infrastructure':
-        return 'インフラ構築';
-      case 'Database':
-        return 'データベース設計・運用';
-      case 'Backend':
-        return 'バックエンド開発';
-      case 'Testing':
-        return 'テスト自動化';
-      case 'Productivity':
-        return '生産性向上ツール';
-      default:
-        return '';
-    }
-  }
-  
-  </script>
-  
-  <style>
-  .fit-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* アスペクト比を保ちつつ、枠にピッタリ */
-  }
-  </style>
+];
+
+
+/** リアクティブデータの定義 */
+
+/** メソッドの定義 */
+const onclickBasicOsuwari = () => {
+  console.log('Osuwari clicked!')
+}
+
+// 改行文字を変換
+function formatText(text) {
+  return text.split('\n');
+}
+
+</script>
+
+<style>
+.fit-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* アスペクト比を保ちつつ、枠にピッタリ */
+}
+</style>

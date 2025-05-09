@@ -17,9 +17,9 @@
       :ref="el => circleRefs[index] = el"
       @click="onGo(item.value)"
       @mouseenter="speechBubbleText = item.text"
-      @mouseleave="speechBubbleText = 'Need something?'"
+      @mouseleave="speechBubbleText = t('home.message.default')"
       >
-      {{ item.label }}
+      {{ t('home.' + item.value) }}
     </div>
 
   </div>
@@ -30,42 +30,39 @@ import { ref, onMounted, computed } from 'vue'
 import { useDisplay } from 'vuetify'
 import { gsap } from 'gsap'
 import { useRouter } from 'vue-router'
-import BasicOsuwari from '@/component/thing/BasicOsuwari.vue'
+import { useI18n } from 'vue-i18n'
+import BasicOsuwari from '@/component/thing/BasicOsuwari.vue';
 
 /** ルーター */
 const router = useRouter()
+const { t, locale } = useI18n()
 
 // 状態管理
 const slideInDiv = ref(null);
 const circleRefs = [] // 各円形ボタンの要素参照を格納する配列
 
-const speechBubbleText = ref('Hello! I’ll guide you.')
+const speechBubbleText = ref(t('home.message.init'));
 const itemList = [
   {
     value: 'none',
     title: 'No Title',
-    text: 'Hmm... Try another!',
-    label: '???',
+    text: t('home.message.none'),
   },
   {
     value: 'aboutme',
-    text: 'Curious about what my owner’s like?',
-    label: 'About Me',
+    text: t('home.message.aboutme'),
   },
   {
     value: 'works',
-    text: 'Want to see our treasures?',
-    label: 'Works',
+    text: t('home.message.works'),
   },
   {
     value: 'contact',
-    text: 'Inquiries about work here.',
-    label: 'Contact',
+    text: t('home.message.contact'),
   },
   {
     value: 'logout',
-    text: 'Had enough?',
-    label: 'Logout',
+    text: t('home.message.logout'),
   },
 ];
 
