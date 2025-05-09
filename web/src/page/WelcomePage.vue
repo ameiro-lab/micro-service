@@ -29,7 +29,7 @@ const router = useRouter()
 const { t, locale } = useI18n()
 
 // i18nでメッセージを取得し、改行を処理
-const formattedText = ref(formatText(t('welcome.text', { me: 'xxx' })))
+const formattedText = ref(formatText(t('welcome.text')))
 
 // メニューページに遷移する
 function callMugi() {

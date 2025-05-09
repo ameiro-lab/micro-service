@@ -7,7 +7,7 @@ export default {
   // welcome
   'welcome.title' : 'ようこそ。Tech Pawprints へ。',
   'welcome.text' : 
-    'ここは {me} のポートフォリオサイトです。Vue.js Node.js JavaScript を使って可愛く仕上げました。\n\
+    'ここは xxx xxx のポートフォリオサイトです。Vue.js Node.js JavaScript を使って可愛く仕上げました。\n\
     これより中では、これまでに携わったプロジェクトのいくつかを紹介しています。\n\
     詳しい内容は、私の頼もしい相棒『ムギ』が案内してくれますので、まずはサツマイモをあげて名前を呼んでみてください！',
   'welcome.btn' : 'ムギちゃんを呼ぶ🐾', 
