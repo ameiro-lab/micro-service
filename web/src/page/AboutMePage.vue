@@ -320,11 +320,11 @@ const qualificationList = [
 // プロジェクトリスト（SES）
 const projectList = ref([
   {
-    title: t('aboutme.project1.title'),
+    title: t('aboutme.project3.title'),
     period: 'Jul 2024 - now',
-    client: t('aboutme.project1.client'),
-    role: t('aboutme.project1.role'),
-    description: t('aboutme.project1.description'),
+    client: t('aboutme.project3.client'),
+    role: t('aboutme.project3.role'),
+    description: t('aboutme.project3.description'),
     techList: [
       'Java (JDK21)',
       'Spring Boot (3.3.2)',
@@ -357,11 +357,11 @@ const projectList = ref([
     ]
   },
   {
-    title: t('aboutme.project3.title'),
+    title: t('aboutme.project1.title'),
     period: 'Nov 2022 - Apr 2023',
-    client: t('aboutme.project3.client'),
-    role: t('aboutme.project3.role'),
-    description: t('aboutme.project3.description'),
+    client: t('aboutme.project1.client'),
+    role: t('aboutme.project1.role'),
+    description: t('aboutme.project1.description'),
     techList: [
       'Java',
       'Spring',

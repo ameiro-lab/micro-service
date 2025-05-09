@@ -5,7 +5,7 @@ export default {
   'login.password': 'Password',
 
   // welcome
-  'welcome.title' : 'Welcome to my portfolio!',
+  'welcome.title' : 'Hello, World!',
   'welcome.text' : 'Here, you’ll get a peek into who I am as a developer—my story, my skills,\
     and the projects I’ve had the pleasure of working on.\
     And of course, I’m not doing this alone—my trusty sidekick, Mugi the dog, is here to guide you.\n\
