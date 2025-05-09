@@ -1,7 +1,7 @@
 <template>
   <v-btn-toggle
     v-model="mode"
-    color="green"
+    :color="color"
     rounded="0"
     group
   >
@@ -22,7 +22,6 @@ import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { locale } = useI18n()
-
 const mode = ref(localStorage.getItem('lang') || 'ja')
 
 // 言語が変わったら反映＆保存
@@ -34,4 +33,12 @@ watch(mode, (newLang) => {
     console.warn('言語変換エラー:', newLang)
   }
 })
+
+defineProps({
+  color: {
+    type: String,
+    default: 'green' // デフォルト色（任意）
+  }
+})
+
 </script>

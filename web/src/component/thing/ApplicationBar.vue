@@ -2,19 +2,23 @@
   <v-app-bar
     app
     :elevation="2" color="primary" density="compact">
-    <template v-slot:append>
+    <v-app-bar-title>{{ title }}</v-app-bar-title>
+    <template v-slot:prepend>
       <v-app-bar-nav-icon
         icon="mdi-bone"
         @click="isDrawer = !isDrawer" />
     </template>
-    <v-app-bar-title>{{ title }}</v-app-bar-title>
+    <template v-slot:append>
+      <!-- <v-spacer></v-spacer>
+      <LangChangeButton color="primary" /> -->
+    </template>
   </v-app-bar>
 
   <!-- サイドメニュー（TO DO：背景画像を設定する） -->
   <v-navigation-drawer
     temporary
     v-model="isDrawer"
-    :location="$vuetify.display.smAndDown ? 'top' : 'end'">
+    location="left">
     <!-- アイコン -->
     <v-list-item
       lines="two"
@@ -37,6 +41,7 @@
 import { ref } from 'vue'
 import api from '@/api/api'
 import { useRouter } from 'vue-router'
+import LangChangeButton from '@/component/thing/LangChangeButton.vue';
 
 /** ルーター */
 const router = useRouter()

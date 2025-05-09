@@ -2,8 +2,8 @@
   <v-row align="stretch" justify="center">
     <!-- プロフィールカード -->
     <v-col cols="12" md="7">
-      <v-card color="base" style="height: 100%;">
-        <v-row align="center" no-gutters class="pb-4">
+      <v-card style="height: 100%;">
+        <v-row align="center" no-gutters class="pb-4 bg-primary">
           <v-col cols="auto">
             <v-avatar size="80" class="ma-2">
               <img src="https://github.com/ameiro-lab.png" alt="Your Avatar" class="fit-image" />
@@ -11,7 +11,7 @@
           </v-col>
           <v-col class="pl-4">
             <div class="text-h5 font-weight-bold">xxx xxx</div>
-            <div class="text-body-2 text-grey">Web Engineer / Since 2022</div>
+            <div class="text-body-2">Web Engineer / Since 2022</div>
           </v-col>
         </v-row>
         <!-- 自己紹介 -->
@@ -53,10 +53,8 @@
               </v-col>
               <v-col class="text-center">
                 {{ item.value }}%
-              </v-col>
-              <v-col cols="1">
                 <v-icon v-if="item.value >= 80"
-                  color="primary" size="small">mdi-check-circle</v-icon>
+                  color="primary" size="small">mdi-crown</v-icon>
               </v-col>
             </v-row>
           </v-card-text>
@@ -93,38 +91,33 @@
         
         <!-- スマホ版 -->
         <div v-if="$vuetify.display.smAndDown">
-          <v-expansion-panels multiple>
-            <v-expansion-panel
-              v-for="(project, index) in projectList"
+          <v-expansion-panels multiple variant="accordion">
+            <v-expansion-panel rounded="0"
+              v-for="(project, index) in projectList.slice().reverse()"
               :key="project.title">
-              <v-expansion-panel-title>
+              <v-expansion-panel-title color="primary"
+              >
                 {{ project.title }}
               </v-expansion-panel-title>
               <v-expansion-panel-text>
                 <!-- 期間 -->
                 <v-row no-gutters class="mb-2 text-medium-emphasis">
-                  <v-col cols="1">
-                    <v-icon>mdi-calendar</v-icon>
-                  </v-col>
                   <v-col>
+                    <v-icon class="mr-1">mdi-calendar</v-icon>
                     {{ project.period }}
                   </v-col>
                 </v-row>
                 <!-- 顧客 -->
                 <v-row no-gutters class="mb-2 text-medium-emphasis">
-                  <v-col cols="1">
-                    <v-icon>mdi-account</v-icon>
-                  </v-col>
                   <v-col>
+                    <v-icon class="mr-1">mdi-account</v-icon>
                     {{ project.client }}
                   </v-col>
                 </v-row>
                 <!-- 役割 -->
                 <v-row no-gutters class="mb-2 text-medium-emphasis">
-                  <v-col cols="1">
-                    <v-icon>mdi-briefcase</v-icon>
-                  </v-col>
                   <v-col>
+                    <v-icon class="mr-1">mdi-briefcase</v-icon>
                     {{ project.role }}
                   </v-col>
                 </v-row>
@@ -324,7 +317,7 @@ const qualificationList = [
 ];
 
 // プロジェクトリスト（SES）
-const projectList = [
+const projectList = ref([
   {
     title: t('aboutme.project1.title'),
     period: 'Jul 2024 - now',
@@ -378,7 +371,7 @@ const projectList = [
       'Git'
     ]
   }
-];
+]);
 
 
 /** リアクティブデータの定義 */
