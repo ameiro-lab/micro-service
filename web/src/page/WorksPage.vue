@@ -29,6 +29,13 @@
       </v-container>
     </v-window>
   </div>
+
+  <!-- キャラクター -->
+  <div style="width: 200px; height: auto;">
+    <BasicOsuwari @on-click="onclickBasicOsuwari" />
+    <VectorTest />
+  </div>
+
 </template>
 
 <script setup>
@@ -38,6 +45,8 @@ import { useRouter } from 'vue-router'
 import TabSpringBoot from '@/component/blocks/TabSpringBoot.vue'
 import TabGolang from '@/component/blocks/TabGolang.vue'
 import TabExpress from '@/component/blocks/TabExpress.vue'
+import BasicOsuwari from '@/component/thing/BasicOsuwari.vue';
+import VectorTest from '@/component/thing/VectorTest.vue';
 
 /** ルーター */
 const router = useRouter()

@@ -1,211 +1,212 @@
 <template>
-<v-row align="stretch" justify="start">
-  <!-- プロフィールカード -->
-  <v-col cols="12" md="7">
-    <v-card color="base" style="height: 100%;">
-      <v-row align="center" no-gutters class="pb-4 mb-4">
-        <v-col cols="auto">
-          <v-avatar size="80" class="shadow-4">
-            <img src="https://github.com/ameiro-lab.png" alt="Your Avatar" class="fit-image" />
-          </v-avatar>
-        </v-col>
-        <v-col class="pl-4">
-          <div class="text-h5 font-weight-bold">xxx xxx</div>
-          <div class="text-body-2 text-grey">Web Engineer / Since 2022</div>
-        </v-col>
-      </v-row>
-      <!-- 自己紹介 -->
-      <section class="mb-6">
-        <v-card-title>{{ t('aboutme.profile') }}</v-card-title>
-        <v-card-text>
-          <span
-            v-for="(line, index) in profileText"
-            :key="index"
-            class="formatted-line">
-            {{ line }}<br />
-          </span>
-        </v-card-text>
-      </section>
-    </v-card>
-  </v-col>
+  <v-row align="stretch" justify="center">
+    <!-- プロフィールカード -->
+    <v-col cols="12" md="7">
+      <v-card color="base" style="height: 100%;">
+        <v-row align="center" no-gutters class="pb-4">
+          <v-col cols="auto">
+            <v-avatar size="80" class="ma-2">
+              <img src="https://github.com/ameiro-lab.png" alt="Your Avatar" class="fit-image" />
+            </v-avatar>
+          </v-col>
+          <v-col class="pl-4">
+            <div class="text-h5 font-weight-bold">xxx xxx</div>
+            <div class="text-body-2 text-grey">Web Engineer / Since 2022</div>
+          </v-col>
+        </v-row>
+        <!-- 自己紹介 -->
+        <section class="mb-6">
+          <v-card-title>{{ t('aboutme.profile') }}</v-card-title>
+          <v-card-text>
+            <span
+              v-for="(line, index) in profileText"
+              :key="index"
+              class="formatted-line">
+              {{ line }}<br />
+            </span>
+          </v-card-text>
+        </section>
+      </v-card>
+    </v-col>
 
-  <!-- レーダーチャートカード -->
-  <v-col cols="12" md="5">
-    <v-card
-      style="height: 100%;"
-      @mouseenter="isRadarHovered = true"
-      @mouseleave="isRadarHovered = false">
-      <template v-if="!isRadarHovered">
-        <Radar :data="data" :options="options" />
-      </template>
-      <template v-else>
-        <v-card-title class="mb-3">
-          {{ t('aboutme.tech') }}
+    <!-- レーダーチャートカード -->
+    <v-col cols="12" md="5">
+      <v-card
+        style="height: 100%;"
+        @mouseenter="isRadarHovered = true"
+        @mouseleave="isRadarHovered = false">
+        <template v-if="!isRadarHovered">
+          <Radar :data="data" :options="options" />
+        </template>
+        <template v-else>
+          <v-card-title class="mb-3">
+            {{ t('aboutme.tech') }}
+          </v-card-title>
+          <v-card-text>
+            <v-row no-gutters class="mb-1"
+              v-for="(item, index) in stackList" :key="label">
+              <v-col cols="1" />
+              <v-col cols="5" class="mb-1">
+                <strong>
+                  {{ item.label }}
+                </strong>
+              </v-col>
+              <v-col class="text-center">
+                {{ item.value }}%
+              </v-col>
+              <v-col cols="1">
+                <v-icon v-if="item.value >= 80"
+                  color="primary" size="small">mdi-check-circle</v-icon>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </template>
+      </v-card>
+    </v-col>
+
+    <!-- 資格 -->
+    <v-col cols="12" md="12">
+      <v-card >
+        <v-card-title class="text-h6 mb-2">
+          {{ t('aboutme.qualification') }}
         </v-card-title>
         <v-card-text>
-          <v-row no-gutters class="mb-1"
-            v-for="(item, index) in stackList" :key="label">
-            <v-col cols="1" />
-            <v-col cols="5" class="mb-1">
-              <strong>
-                {{ item.label }}
-              </strong>
-            </v-col>
-            <v-col class="text-center">
-              {{ item.value }}%
-            </v-col>
-            <v-col cols="1">
-              <v-icon v-if="item.value >= 80"
-                color="primary" size="small">mdi-check-circle</v-icon>
+          <v-row
+            class="mb-2 pl-3" no-gutters
+            v-for="item in qualificationList" :key="item.name">
+            <v-col cols="12">
+              <v-chip color="primary" variant="outlined" size="small">
+                {{ item.name }}
+              </v-chip>
             </v-col>
           </v-row>
         </v-card-text>
-      </template>
-    </v-card>
+      </v-card>
+    </v-col>
+
+    <!-- 経歴 -->
+    <v-col cols="12" md="12">
+      <v-card >
+        <v-card-title class="text-h6 mb-2">
+          {{ t('aboutme.projects') }}
+        </v-card-title>
+        
+        <!-- スマホ版 -->
+        <div v-if="$vuetify.display.smAndDown">
+          <v-expansion-panels multiple>
+            <v-expansion-panel
+              v-for="(project, index) in projectList"
+              :key="project.title">
+              <v-expansion-panel-title>
+                {{ project.title }}
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
+                <!-- 期間 -->
+                <v-row no-gutters class="mb-2 text-medium-emphasis">
+                  <v-col cols="1">
+                    <v-icon>mdi-calendar</v-icon>
+                  </v-col>
+                  <v-col>
+                    {{ project.period }}
+                  </v-col>
+                </v-row>
+                <!-- 顧客 -->
+                <v-row no-gutters class="mb-2 text-medium-emphasis">
+                  <v-col cols="1">
+                    <v-icon>mdi-account</v-icon>
+                  </v-col>
+                  <v-col>
+                    {{ project.client }}
+                  </v-col>
+                </v-row>
+                <!-- 役割 -->
+                <v-row no-gutters class="mb-2 text-medium-emphasis">
+                  <v-col cols="1">
+                    <v-icon>mdi-briefcase</v-icon>
+                  </v-col>
+                  <v-col>
+                    {{ project.role }}
+                  </v-col>
+                </v-row>
+                <!-- 詳細
+                <v-row no-gutters class="mb-2">
+                  {{ project.description }}
+                </v-row> -->
+                <!-- 技術スタック -->
+                <v-row no-gutters class="mb-2">
+                  <v-chip-group column>
+                    <v-chip
+                      v-for="tech in project.techList"
+                      :key="tech"
+                      color="primary"
+                      variant="outlined"
+                      size="small">
+                      {{ tech }}
+                    </v-chip>
+                  </v-chip-group>
+                </v-row>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </div>
+
+        <!-- PC版 -->
+        <div v-else>
+          <v-timeline
+            class="pb-5 px-5"
+            align="start" side="end" line-color="primary"
+            truncate-line="end">
+            <v-timeline-item
+              v-for="(project, index) in projectList"
+              :key="index"
+              min-width="100%"
+              :dot-color="'primary'"
+              :icon="'mdi-briefcase-outline'">
+              <!-- 期間 -->
+              <template #opposite>
+                <div class="text-grey-darken-1">{{ project.period }}</div>
+              </template>
+              <!-- カード -->
+              <v-card>
+                <v-card-title class="text-h6 bg-primary">{{ project.title }}</v-card-title>
+                <v-card-subtitle class="pt-4">
+                  {{ project.client }} — {{ project.role }}
+                </v-card-subtitle>
+                <v-card-text>
+                  {{ project.description }}
+                  <v-chip-group column class="mt-3" tag="div">
+                    <v-chip
+                      v-for="tech in project.techList"
+                      :key="tech"
+                      class="ma-1"
+                      size="small"
+                      color="primary"
+                      variant="outlined">
+                      {{ tech }}
+                    </v-chip>
+                  </v-chip-group>
+                </v-card-text>
+              </v-card>
+            </v-timeline-item>
+          </v-timeline>
+        </div>
+      </v-card>
+    </v-col>
+
+    <!-- character -->
+    <v-col cols="auto">
+      <div style="width: 200px; height: auto;">
+        <VectorTest />
+      </div>
   </v-col>
-
-  <!-- 資格 -->
-  <v-col cols="12" md="12">
-    <v-card >
-      <v-card-title class="text-h6 mb-2">
-        {{ t('aboutme.qualification') }}
-      </v-card-title>
-      <v-card-text>
-        <v-row
-          class="mb-2 pl-3" no-gutters
-          v-for="item in qualificationList" :key="item.name">
-          <v-col cols="12">
-            <v-chip color="primary" variant="outlined" size="small">
-              {{ item.name }}
-            </v-chip>
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
-  </v-col>
-
-  <!-- 経歴 -->
-  <v-col cols="12" md="12">
-    <v-card >
-    <v-card-title class="text-h6 mb-2">
-      {{ t('aboutme.projects') }}
-    </v-card-title>
-    
-    <!-- スマホ版 -->
-    <div v-if="$vuetify.display.smAndDown">
-      <v-expansion-panels multiple>
-        <v-expansion-panel
-          v-for="(project, index) in projectList"
-          :key="project.title">
-          <v-expansion-panel-title>
-            {{ project.title }}
-          </v-expansion-panel-title>
-          <v-expansion-panel-text>
-            <!-- 期間 -->
-            <v-row no-gutters class="mb-2 text-medium-emphasis">
-              <v-col cols="2">
-                Period:
-              </v-col>
-              <v-col>
-                {{ project.period }}
-              </v-col>
-            </v-row>
-            <!-- 顧客 -->
-            <v-row no-gutters class="mb-2 text-medium-emphasis">
-              <v-col cols="2">
-                Client:
-              </v-col>
-              <v-col>
-                {{ project.client }}
-              </v-col>
-            </v-row>
-            <!-- 役割 -->
-            <v-row no-gutters class="mb-2 text-medium-emphasis">
-              <v-col cols="2">
-                Role:
-              </v-col>
-              <v-col>
-                {{ project.role }}
-              </v-col>
-            </v-row>
-            <!-- 詳細
-            <v-row no-gutters class="mb-2">
-              {{ project.description }}
-            </v-row> -->
-            <!-- 技術スタック -->
-            <v-row no-gutters class="mb-2">
-              <v-chip-group column>
-                <v-chip
-                  v-for="tech in project.techList"
-                  :key="tech"
-                  color="primary"
-                  variant="outlined"
-                  size="small">
-                  {{ tech }}
-                </v-chip>
-              </v-chip-group>
-            </v-row>
-          </v-expansion-panel-text>
-        </v-expansion-panel>
-      </v-expansion-panels>
-    </div>
-
-    <!-- PC版 -->
-    <div v-else>
-      <v-timeline
-      class="pb-5 px-5"
-        align="start" side="end" line-color="primary"
-        truncate-line="end">
-        <v-timeline-item
-          v-for="(project, index) in projectList"
-          :key="index"
-          :dot-color="'primary'"
-          :icon="'mdi-briefcase-outline'">
-          <template #opposite>
-            <div class="text-caption text-grey-darken-1">{{ project.period }}</div>
-          </template>
-
-          <v-card>
-            <v-card-title class="text-h6 bg-primary">{{ project.title }}</v-card-title>
-            <v-card-subtitle class="pt-4">
-              {{ project.client }} — {{ project.role }}
-            </v-card-subtitle>
-            <v-card-text>
-              <p>{{ project.description }}</p>
-              <v-chip-group column class="mt-3" tag="div">
-                <v-chip
-                  v-for="tech in project.techList"
-                  :key="tech"
-                  class="ma-1"
-                  size="small"
-                  color="primary"
-                  variant="outlined">
-                  {{ tech }}
-                </v-chip>
-              </v-chip-group>
-            </v-card-text>
-          </v-card>
-        </v-timeline-item>
-      </v-timeline>
-    </div>
-  </v-card>
-  </v-col>
-</v-row>
-
-<!-- キャラクター -->
-<div style="width: 200px; height: auto;">
-  <BasicOsuwari @on-click="onclickBasicOsuwari" />
-  <VectorTest />
-</div>
-  
+  </v-row>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
 import { useDisplay } from 'vuetify'
 import { useI18n } from 'vue-i18n'
-import BasicOsuwari from '@/component/thing/BasicOsuwari.vue'
-import VectorTest from '@/component/thing/VectorTest.vue'
+import VectorTest from '@/component/thing/VectorTest.vue';
 
 /** plugins */
 const { t, locale } = useI18n()
