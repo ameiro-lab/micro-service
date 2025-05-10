@@ -18,9 +18,14 @@
   </v-row>
 
   <!-- public/imo_before.svg からイモ画像を参照 -->
-  <div style="width: 300px; height: auto;">
-    <img id="imo-before" src="@/assets/svg/imo_before.svg" />
-  </div>
+  <v-row>
+    <v-spacer></v-spacer>
+      <div style="width: 300px; height: auto; position: relative;">
+        <img id="imo-before" src="@/assets/svg/imo_before.svg" style="position: absolute; top: 0; left: 0; visibility: visible;" />
+        <img id="imo_after" src="@/assets/svg/imo_after.svg" style="position: absolute; top: 0; left: 0; visibility: hidden;" />
+      </div>
+    <v-spacer></v-spacer>
+  </v-row>
 </template>
 
 <script setup>
@@ -28,7 +33,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import CoreButton from '@/component/thing/CoreButton.vue';
-import { animateFlyAcrossScreen } from '@/plugins/animations';
+import { animateFlyAcrossScreen, animationBounce } from '@/plugins/animations';
 
 /** plugins */
 const router = useRouter()
@@ -43,17 +48,26 @@ onMounted(() => {
 
 // メニューページに遷移する
 function callMugi() {
-
-  const target = '#imo-before';
+  const imoBefore = document.getElementById('imo-before');
+  const imoAfter = document.getElementById('imo_after');
 
   // アニメーションを実行
-  animateFlyAcrossScreen(target, 'left', 1.2)
+  animationBounce(imoBefore, 0.7)
     .then(() => {
-      // アニメーションが完了した後、メニューページに遷移
+      // アニメーションが完了した後、画像を変更
+      imoBefore.style.visibility = 'hidden';  // imo-beforeを非表示
+      imoAfter.style.visibility = 'visible';  // imo_afterを表示
+    })
+    .then(() => {
+      // imo_after に対して再度アニメーションを実行
+      return animationBounce(imoAfter, 0.7);  // Promiseを返す
+    })
+    .then(() => {
+      // アニメーション後にメニューページに遷移
       router.push({ name: 'home' });
     })
     .catch((error) => {
-      // TO DO: エラーハンドリング
+      // エラーハンドリング
       console.error('Animation error:', error);
     });
 }
@@ -71,9 +85,9 @@ function formatText(text) {
   margin-bottom: 0.5rem; /* 行間を調整 */
 }
 
-#imo-before {
-  position: relative; /* または absolute。top が効くように */
-  top: -100px; /* 初期位置 */
+/* #imo-before {
+  position: relative; または absolute。top が効くように
+  top: -100px; 初期位置
   visibility: hidden;
-}
+} */
 </style>

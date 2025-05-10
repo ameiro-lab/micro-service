@@ -102,7 +102,7 @@
               </v-expansion-panel-title>
               <v-expansion-panel-text>
                 <!-- 期間 -->
-                <v-row no-gutters class="mb-2 text-medium-emphasis">
+                <v-row no-gutters class="my-2 text-medium-emphasis">
                   <v-col>
                     <v-icon class="mr-1">mdi-calendar</v-icon>
                     {{ project.period }}

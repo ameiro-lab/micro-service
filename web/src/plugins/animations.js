@@ -1,9 +1,25 @@
 import { gsap } from "gsap";
 
 /**
- * 要素をフェードインさせながら指定方向から表示するアニメーション関数
+ * 要素を跳ねるアニメーション関数
  * 
  * @param {HTMLElement|string} target - アニメーションの対象（セレクタ or 要素）
+ * @param {number} duration - アニメーションの時間（秒）
+ */
+export const animationBounce = (target, duration = 0.8) => {
+  return gsap.to(target, {
+    y: -50,              // より強い跳ねる感じ
+    duration: duration,       // 少し速め
+    ease: "back.out",    // イージング（バックアウト）
+    repeat: 1,           // 1回繰り返す
+    yoyo: true,          // 上下に跳ねる
+  });
+};
+
+/**
+ * 要素をフェードインさせながら指定方向から表示するアニメーション関数
+ * 
+ * @param {HTMLElement|string} target - アニメーションの対象
  * @param {string} direction - アニメーションの方向 ('top', 'bottom', 'left', 'right')
  * @param {number} duration - アニメーションの時間（秒）
  */
