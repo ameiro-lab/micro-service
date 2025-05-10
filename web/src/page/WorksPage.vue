@@ -1,8 +1,8 @@
 <template>
-  <p class="text-h6">
-    APIコレクション
-  </p>
-  <p class="text-subtitle-1">これまで実装したAPIのコレクションをご紹介します。</p>
+  <!-- <p class="text-h6">
+    {{ t('works.text') }}
+  </p> -->
+  <div class="text-subtitle-1 mb-4">{{ t('works.text') }}</div>
 
   <div class="layout-25-75" style="width: 100%;">
     <!-- タブバー -->
@@ -16,7 +16,9 @@
     <!-- ウィンドウ -->
     <v-window class="content-75"
       v-model="tab" transition="slide-y-transition">
-      <v-container fluid>
+      <v-sheet border
+        :style="{ height: 'calc(100vh - 150px)' }"
+        >
         <v-window-item value="spring">
           <TabSpringBoot />
         </v-window-item>
@@ -26,14 +28,14 @@
         <v-window-item value="express">
           <TabExpress />
         </v-window-item>
-      </v-container>
+      </v-sheet>
     </v-window>
   </div>
 
   <!-- キャラクター -->
   <div style="width: 200px; height: auto;">
-    <BasicOsuwari @on-click="onclickBasicOsuwari" />
-    <VectorTest />
+    <MugiShit @on-click="onclickMugiShit" />
+    <MugiShithigt />
   </div>
 
 </template>
@@ -42,14 +44,16 @@
 import { ref } from 'vue'
 import api from '@/api/api'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import TabSpringBoot from '@/component/blocks/TabSpringBoot.vue'
 import TabGolang from '@/component/blocks/TabGolang.vue'
 import TabExpress from '@/component/blocks/TabExpress.vue'
-import BasicOsuwari from '@/component/thing/BasicOsuwari.vue';
-import VectorTest from '@/component/thing/VectorTest.vue';
+import MugiShit from '@/component/thing/MugiShit.vue';
+import MugiShithigt from '@/component/thing/MugiShithigt.vue';
 
-/** ルーター */
+/** plugins */
 const router = useRouter()
+const { t } = useI18n()
 
 /** リアクティブデータの定義 */
 const tab = ref('');    // 初期値
@@ -61,5 +65,8 @@ const tabsList = [
 ]
 
 /** メソッドの定義 */
+const onclickMugiShit = () => {
+  console.log('Osuwari clicked!')
+}
 
 </script>

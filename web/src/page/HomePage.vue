@@ -3,7 +3,7 @@
     <div
       ref="slideInDiv"
       class="circle">
-      <BasicOsuwari @on-click="onclickBasicOsuwari" />
+      <MugiShit @on-click="onclickMugiShit" />
       <!-- 吹き出し -->
       <div class="speech-bubble">
         {{ speechBubbleText }}
@@ -31,7 +31,7 @@ import { useDisplay } from 'vuetify'
 import { gsap } from 'gsap'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import BasicOsuwari from '@/component/thing/BasicOsuwari.vue';
+import MugiShit from '@/component/thing/MugiShit.vue';
 
 /** ルーター */
 const router = useRouter()
@@ -154,7 +154,7 @@ function onGo(value) {
   router.push(value);
 }
 
-const onclickBasicOsuwari = () => {
+const onclickMugiShit = () => {
   console.log('Osuwari clicked!')
 }
 

@@ -67,6 +67,10 @@ export default {
 
 
   // works
+  'works.title' : '',
+  'works.text' : '犬が夢中で穴を掘るように、コツコツと技術を深めました。',
+  'works.mugi.none' : '鋭意作成中。公開をお楽しみに！',
+  'works.mugi.def' : '各言語ごとに、いくつかの機能があります。気になるところから触れてみてくださいね。',
 
   // message
   'message.ERR-API-001': 'ワン！応答がありません。サーバーが寝てるかも...',

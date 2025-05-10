@@ -190,7 +190,7 @@
     <!-- character -->
     <v-col cols="auto">
       <div style="width: 200px; height: auto;">
-        <VectorTest />
+        <MugiShithigt />
       </div>
   </v-col>
   </v-row>
@@ -200,17 +200,11 @@
 import { ref, computed } from 'vue'
 import { useDisplay } from 'vuetify'
 import { useI18n } from 'vue-i18n'
-import VectorTest from '@/component/thing/VectorTest.vue';
+import MugiShithigt from '@/component/thing/MugiShithigt.vue';
 
 /** plugins */
-const { t, locale } = useI18n()
+const { t } = useI18n()
 const { mobile } = useDisplay() // Vuetifyの画面サイズ情報を取得
-
-// 共通データ
-const md = 6;
-const titleClass = 'text-h5 font-weight-bold'
-const textClass = 'text-body-1'
-const isRadarHovered = ref(false)  // ホバー状態を管理
 
 // i18nでメッセージを取得し、改行を処理
 const profileText = ref(formatText(t('aboutme.profile.text')))
@@ -374,14 +368,10 @@ const projectList = ref([
   }
 ]);
 
-
 /** リアクティブデータの定義 */
+const isRadarHovered = ref(false)  // ホバー状態を管理
 
 /** メソッドの定義 */
-const onclickBasicOsuwari = () => {
-  console.log('Osuwari clicked!')
-}
-
 // 改行文字を変換
 function formatText(text) {
   return text.split('\n');

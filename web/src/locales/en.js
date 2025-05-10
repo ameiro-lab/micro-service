@@ -72,6 +72,8 @@ export default {
   'aboutme.project1.description' : 'Developed a learning management system to support e-learning, focusing on backend performance and system architecture.',
 
   // works
+  'works.title' : 'No projects to show yet...',
+  'works.text' : 'Here are some of the projects I’ve worked on.',
 
   // message
   'message.ERR-API-001': 'Looks like the server is taking a nap... woof!',
