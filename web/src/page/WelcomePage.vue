@@ -13,16 +13,18 @@
       </v-card>
     </v-col>
     <v-col cols="12">
-      <CoreButton :label="t('welcome.btn')" @click="callMugi" />
+      <CoreButton @click="callMugi" :label="t('welcome.btn')"  />
     </v-col>
   </v-row>
 
   <!-- public/imo_before.svg からイモ画像を参照 -->
   <v-row>
     <v-spacer></v-spacer>
+      <div style="width: 200px; height: auto; position: relative;">
+        <img id="imo-before" src="@/assets/svg/imo_before.svg" style="position: absolute; top: 0; left: 0; opacity: 0;" />
+      </div>
       <div style="width: 300px; height: auto; position: relative;">
-        <img id="imo-before" src="@/assets/svg/imo_before.svg" style="position: absolute; top: 0; left: 0; visibility: visible;" />
-        <img id="imo_after" src="@/assets/svg/imo_after.svg" style="position: absolute; top: 0; left: 0; visibility: hidden;" />
+        <img id="imo_after" src="@/assets/svg/imo_after.svg" style="position: absolute; top: 0; left: 0; opacity: 0;" />
       </div>
     <v-spacer></v-spacer>
   </v-row>
@@ -33,7 +35,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import CoreButton from '@/component/thing/CoreButton.vue';
-import { animateFlyAcrossScreen, animationBounce } from '@/plugins/animations';
+import { animateFadeInFrom, animationBounce } from '@/plugins/animations';
 
 /** plugins */
 const router = useRouter()
@@ -47,29 +49,28 @@ onMounted(() => {
 });
 
 // メニューページに遷移する
-function callMugi() {
+const callMugi = async () => {
+  
   const imoBefore = document.getElementById('imo-before');
   const imoAfter = document.getElementById('imo_after');
 
-  // アニメーションを実行
-  animationBounce(imoBefore, 0.7)
-    .then(() => {
-      // アニメーションが完了した後、画像を変更
-      imoBefore.style.visibility = 'hidden';  // imo-beforeを非表示
-      imoAfter.style.visibility = 'visible';  // imo_afterを表示
-    })
-    .then(() => {
-      // imo_after に対して再度アニメーションを実行
-      return animationBounce(imoAfter, 0.7);  // Promiseを返す
-    })
-    .then(() => {
-      // アニメーション後にメニューページに遷移
-      router.push({ name: 'home' });
-    })
-    .catch((error) => {
-      // エラーハンドリング
-      console.error('Animation error:', error);
-    });
+  try {
+    // 1つ目のアニメーション
+    await animateFadeInFrom(imoBefore, 'top');
+
+    // 画像を切り替え
+    imoBefore.style.visibility = 'hidden';
+    imoAfter.style.visibility = 'visible';
+
+    // 2つ目のアニメーション
+    await animationBounce(imoAfter);
+
+    // ページ遷移
+    router.push({ name: 'home' });
+
+  } catch (error) {
+    console.error('アニメーションエラー:', error);
+  }
 }
 
 // 改行文字を変換

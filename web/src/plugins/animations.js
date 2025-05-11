@@ -1,71 +1,85 @@
 import { gsap } from "gsap";
 
 /**
- * 要素を跳ねるアニメーション関数
+ * 要素にバウンスアニメーション効果を適用する関数
  * 
  * @param {HTMLElement|string} target - アニメーションの対象（セレクタ or 要素）
- * @param {number} duration - アニメーションの時間（秒）
+ * @param {Number} duration - アニメーションの持続時間（秒）
+ * @returns {gsap.core.Tween} GSAPのTweenインスタンス
  */
-export const animationBounce = (target, duration = 0.8) => {
-  return gsap.to(target, {
-    y: -50,              // より強い跳ねる感じ
-    duration: duration,       // 少し速め
-    ease: "back.out",    // イージング（バックアウト）
-    repeat: 1,           // 1回繰り返す
-    yoyo: true,          // 上下に跳ねる
-  });
+export const animationBounce = (target, duration = 1) => {
+  return gsap.fromTo(
+    target,
+    {
+      // 初期状態：透明で初期位置（y=0）
+      opacity: 0,
+      y: 0
+    },
+    {
+      // アニメーション状態：上方向に移動し、完全に表示
+      y: -50,           // 上に50ピクセル移動
+      opacity: 1,       // 完全に表示
+      duration,         // アニメーション時間
+      ease: "back.out", // はずみ返る効果のイージング
+      repeat: 1,        // 1回繰り返す（合計2回再生）
+      yoyo: true,       // 繰り返し時に逆再生する
+    }
+  );
 };
 
 /**
  * 要素をフェードインさせながら指定方向から表示するアニメーション関数
  * 
- * @param {HTMLElement|string} target - アニメーションの対象
- * @param {string} direction - アニメーションの方向 ('top', 'bottom', 'left', 'right')
- * @param {number} duration - アニメーションの時間（秒）
+ * @param {Element|String} target - アニメーション対象
+ * @param {String} direction - アニメーションの開始方向 ('top', 'bottom', 'left', 'right')
+ * @param {Number} duration - アニメーションの持続時間（秒）
+ * @param {Number} offset - 開始位置のオフセット（ピクセル）
+ * @returns {gsap.core.Tween} GSAPのTweenインスタンス
  */
-export const animateFadeInFrom = (target, direction = 'bottom', duration = 0.8) => {
-  // 移動量の初期化
+export const animateFadeInFrom = (target, direction = 'bottom', duration = 1, offset = 200) => {
+  // 移動の初期座標を設定
   let x = 0;
   let y = 0;
-  
-  // 方向に基づいて移動量を設定
+
+  // 方向に応じて適切な座標を設定
   switch (direction) {
     case 'top':
-      y = -50; // 上から50px移動
+      y = -offset; // 上から下へ
       break;
     case 'bottom':
-      y = 50;  // 下から50px移動
+      y = offset;  // 下から上へ
       break;
     case 'left':
-      x = -50; // 左から50px移動
+      x = -offset; // 左から右へ
       break;
     case 'right':
-      x = 50;  // 右から50px移動
+      x = offset;  // 右から左へ
       break;
     default:
       // 無効な方向が指定された場合は警告を表示
       console.warn(`Invalid direction "${direction}" passed to animateFadeInFrom`);
   }
-  
-  // GSAPを使用してアニメーションを実行
-  gsap.fromTo(
+
+  // GSAPを使用してアニメーションを作成
+  return gsap.fromTo(
     target,
     {
-      // 開始状態：透明で、指定された方向にオフセット
+      // 初期状態：透明で指定方向にオフセットされた位置
       opacity: 0,
       x,
       y,
     },
     {
-      // 終了状態：完全に表示され、元の位置に
+      // 最終状態：完全に表示され、本来の位置に配置
       opacity: 1,
       x: 0,
       y: 0,
-      duration,           // アニメーション時間
-      ease: "power2.out", // イージング関数（徐々に減速）
+      duration,  // アニメーション時間
+      ease: "power2.out",  // イージング関数（徐々に減速）
     }
   );
 };
+
 
 /**
  * しっぽを振るアニメーション関数
