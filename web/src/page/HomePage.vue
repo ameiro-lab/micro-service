@@ -21,8 +21,8 @@
       >
       {{ t('home.' + item.value) }}
     </div>
-
   </div>
+
 </template>
 
 <script setup>
@@ -32,6 +32,7 @@ import { gsap } from 'gsap'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import MugiShit from '@/component/thing/MugiShit.vue';
+import SpeechBubble from '@/component/thing/SpeechBubble.vue'
 
 /** ルーター */
 const router = useRouter()

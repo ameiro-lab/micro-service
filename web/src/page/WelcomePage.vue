@@ -20,10 +20,8 @@
   <!-- public/imo_before.svg からイモ画像を参照 -->
   <v-row>
     <v-spacer></v-spacer>
-      <div style="width: 200px; height: auto; position: relative;">
-        <img id="imo-before" src="@/assets/svg/imo_before.svg" style="position: absolute; top: 0; left: 0; opacity: 0;" />
-      </div>
       <div style="width: 300px; height: auto; position: relative;">
+        <img id="imo-before" src="@/assets/svg/imo_before.svg" style="position: absolute; top: 0; left: 0; opacity: 0; width: 250px;" />
         <img id="imo_after" src="@/assets/svg/imo_after.svg" style="position: absolute; top: 0; left: 0; opacity: 0;" />
       </div>
     <v-spacer></v-spacer>
@@ -39,7 +37,7 @@ import { animateFadeInFrom, animationBounce } from '@/plugins/animations';
 
 /** plugins */
 const router = useRouter()
-const { t, locale } = useI18n()
+const { t } = useI18n()
 
 // i18nでメッセージを取得し、改行を処理
 const formattedText = ref(formatText(t('welcome.text')))
@@ -59,6 +57,8 @@ const callMugi = async () => {
     await animateFadeInFrom(imoBefore, 'top');
 
     // 画像を切り替え
+    // 画像を切り替える前に少し待機
+    await new Promise(resolve => setTimeout(resolve, 600));
     imoBefore.style.visibility = 'hidden';
     imoAfter.style.visibility = 'visible';
 

@@ -78,5 +78,10 @@ export default {
   // message
   'message.ERR-API-001': 'Looks like the server is taking a nap... woof!',
   'message.ERR-LOGIN-001': 'Uh-oh... We can\'t find your pawprint.',
+
+  // mugi
+  'aboutme.mugi.1' : 'I\'m watching over your work! Woof!',
+  'works.mugi.none' : '',
+  'works.mugi.def' : '',
   
 }

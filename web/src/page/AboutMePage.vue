@@ -3,13 +3,13 @@
     <!-- プロフィールカード -->
     <v-col cols="12" md="7">
       <v-card style="height: 100%;">
-        <v-row align="center" no-gutters class="pb-4 bg-primary">
+        <v-row align="center" no-gutters class="bg-primary py-2">
           <v-col cols="auto">
             <v-avatar size="80" class="ma-2">
               <img src="https://github.com/ameiro-lab.png" alt="Your Avatar" class="fit-image" />
             </v-avatar>
           </v-col>
-          <v-col class="pl-4">
+          <v-col class="pl-4 pb-4">
             <div class="text-h5 font-weight-bold">xxx xxx</div>
             <div class="text-body-2">Web Engineer / Since 2022</div>
           </v-col>
@@ -45,7 +45,7 @@
           </v-card-title>
           <v-card-text>
             <v-row no-gutters class="mb-1"
-              v-for="(item, index) in stackList" :key="label">
+              v-for="(item, index) in stackList" :key="item.label">
               <v-col cols="1" />
               <v-col cols="5" class="mb-1">
                 <strong>
@@ -186,29 +186,42 @@
         </div>
       </v-card>
     </v-col>
+  </v-row>
 
-    <!-- character -->
+  <!-- 吹き出し -->
+  <div style="position: relative; bottom: 35px">
+    <SpeechBubble
+      ref="speechBubble" position="bottom" />
+  </div>
+  <!-- キャラクター -->
+  <v-row align="stretch" justify="center">
     <v-col cols="auto">
       <div style="width: 200px; height: auto;">
-        <MugiShithigt />
+        <MugiShithigt
+          ref="mugiShithigt"
+          @on-click="onclickMugi"  />
       </div>
-  </v-col>
+    </v-col>
   </v-row>
+
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { useDisplay } from 'vuetify'
 import { useI18n } from 'vue-i18n'
 import MugiShithigt from '@/component/thing/MugiShithigt.vue';
+import SpeechBubble from '@/component/thing/SpeechBubble.vue';
 
 /** plugins */
 const { t } = useI18n()
-const { mobile } = useDisplay() // Vuetifyの画面サイズ情報を取得
 
-// i18nでメッセージを取得し、改行を処理
-const profileText = ref(formatText(t('aboutme.profile.text')))
+/** DOM参照 */
+const mugiShithigt = ref({})
+const speechBubble = ref(false)
 
+/** チャート.js関連 */
+import { Radar } from 'vue-chartjs'
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -218,18 +231,10 @@ import {
   Tooltip,
   Legend
 } from 'chart.js'
-import { Radar } from 'vue-chartjs'
-
 ChartJS.register(
-  RadialLinearScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Tooltip,
-  Legend
+  RadialLinearScale, PointElement, LineElement,
+  Filler, Tooltip,Legend
 )
-
-/** Chart.js */
 // スタックリスト
 const stackList = [
   { label: t('aboutme.tech.fe'), text: 'Vue.js(JS/TS), HTML/CSS', value: 82 },
@@ -240,8 +245,7 @@ const stackList = [
   { label: t('aboutme.tech.test'), text: 'JUnit, Jest×', value: 52 },
   { label: t('aboutme.tech.tools'), text: 'Git, VSCode, Eclipse', value: 60 },
 ];
-
-// 表示するデータ
+// レーダーチャートに表示するデータ
 const data = {
   labels: stackList.map(item => item.label),
   datasets: [
@@ -263,8 +267,7 @@ const data = {
     },
   ]
 }
-
-// オプション設定（必要に応じてカスタマイズ）
+// レーダーチャートのオプション設定
 const options = {
   responsive: true,
   maintainAspectRatio: false,
@@ -304,15 +307,17 @@ const options = {
   },
 }
 
-// 資格リスト
-const qualificationList = [
+/** 
+ * リアクティブデータの定義
+ */
+const isRadarHovered = ref(false) // レーダーチャートのホバー状態を管理
+const profileText = ref(formatText(t('aboutme.profile.text')))  // i18nでメッセージを取得し、改行を処理
+const qualificationList = [       // 資格リスト
   { name: 'Oracle Certified Java Programmer, Silver SE 1', date: '2024年4月' },
   // { name: '秘書技能検定準１級', date: '2017年2月' },
   // { name: 'ビジネス能力検定3級', date: '2017年2月' }
 ];
-
-// プロジェクトリスト（SES）
-const projectList = ref([
+const projectList = ref([         // プロジェクトリスト
   {
     title: t('aboutme.project3.title'),
     period: 'Jul 2024 - now',
@@ -368,13 +373,22 @@ const projectList = ref([
   }
 ]);
 
-/** リアクティブデータの定義 */
-const isRadarHovered = ref(false)  // ホバー状態を管理
-
-/** メソッドの定義 */
-// 改行文字を変換
+/** 
+ * メソッドの定義
+ */
+// 改行文字を変換する
 function formatText(text) {
   return text.split('\n');
+}
+
+// ムギを押下時、
+const onclickMugi = () => {
+  // 吹き出しを表示する
+  let message = t('aboutme.mugi.1');
+  speechBubble.value.showBubble(message);
+  // 尻尾を振る
+  mugiShithigt.value.shakeTail();
+  // animateTailShake('');mugiShithigt
 }
 
 </script>
