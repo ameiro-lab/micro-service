@@ -68,7 +68,24 @@ export default {
   // works
   'works.title' : '',
   'works.text' : '仔犬が夢中で穴を掘るように、コツコツと技術を深めました。',
-  
+
+  // contact
+  'contact.title' : 'お問い合わせフォーム',
+  'contact.text' : '',
+  'contact.name.label': 'お名前',
+  'contact.name.placeholder': '例：安藤 ムギ',
+  'contact.email.label': 'メールアドレス',
+  'contact.email.placeholder': '',
+  'contact.subject.label': '件名',
+  'contact.subject.placeholder': '例：お仕事のご依頼について',
+  'contact.message.label': 'お問い合わせ内容',
+  'contact.message.placeholder': 'ご用件を詳しくご記入ください。',
+  'contact.submit': '送信',
+  'contact.confirm': '入力内容を確認',
+  'validation.required': '必須項目です',
+  'validation.invalidEmail': '有効なメールアドレスを入力してください',
+
+
   // message
   'message.ERR-API-001': 'ワン！応答がありません。サーバーが寝てるかも...',
   'message.ERR-LOGIN-001': '認証に失敗しました。足あとが見つかりません。',

@@ -148,8 +148,8 @@ function spreadMenu() {
  * @param {string} item - クリックされた要素
  */
 function onGo(value) {
-  // Contactは未実装のため
-  if(value === 'contact' || value === 'none-1' || value === 'none-2') {
+  // 未実装のため
+  if(value === 'none-1' || value === 'none-2') {
     return;
   }
   router.push(value);
