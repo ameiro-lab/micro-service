@@ -9,7 +9,7 @@ export default {
   'welcome.text' : 
     'ここは xxx xxx のポートフォリオサイトです。Vue.js Node.js JavaScript を使用し、可愛く仕上げました！\n\
     この先のページでは、わたし自身の紹介と、これまでの経験をもとに行ってきた活動の一部をご覧いただけます。\n\
-    詳細については、我が頼もしい相棒『ムギ』が案内してくれますので、まずは大好物のサツマイモで呼び寄せましょう！',
+    詳細については、わたしの頼もしい相棒『ムギ』が案内してくれますので、まずは大好物のサツマイモで呼び寄せましょう！',
   'welcome.btn' : 'ムギちゃんを呼ぶ！', 
 
   // home
@@ -22,7 +22,7 @@ export default {
   'home.message.default': 'どうしましたか？',
   'home.message.aboutme' : '飼い主のことが気になりますか？',
   'home.message.works' : '宝物を見たいのですね！',
-  'home.message.contact' : 'お仕事のご相談はこちら。',
+  'home.message.contact' : 'お仕事のご相談はこちら🐾',
   'home.message.none' : 'さつまいもはどこ？',
   'home.message.logout' : 'また遊びに来てください！',
 
@@ -67,7 +67,7 @@ export default {
 
   // works
   'works.title' : '',
-  'works.text' : '犬たちが夢中で穴を掘るように、コツコツと技術を深めました。',
+  'works.text' : '仔犬が夢中で穴を掘るように、コツコツと技術を深めました。',
   
   // message
   'message.ERR-API-001': 'ワン！応答がありません。サーバーが寝てるかも...',

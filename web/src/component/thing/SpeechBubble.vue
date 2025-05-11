@@ -28,11 +28,20 @@ const props = defineProps({
 const message = ref('');
 const isSpeechBuble = ref(false)
 const slotContent = ref(null)    // slot内の要素のDOM　※使ってないけど高さ取得したい時用
+let isAnimating = false;  // アニメーション中かどうかを管理するフラグ
+let currentAnimation = null;  // 現在実行中のアニメーションを管理する
 
 /**
  * 吹き出しを表示するメソッド
  */
 const showBubble = async (pram) => {
+
+  if (isAnimating) {
+    currentAnimation.kill();  // 現在のアニメーションを中断
+    isAnimating = false;  // アニメーションが中断されたのでフラグをリセット
+  }
+
+  isAnimating = true;  // アニメーションが開始された
 
   message.value = pram;   // メッセージを設定する
   isSpeechBuble.value = true  // 吹き出しを表示する
@@ -45,10 +54,25 @@ const showBubble = async (pram) => {
   */
 
   // ふわっとアニメーション
-  gsap.fromTo(
+  currentAnimation = gsap.fromTo(
     '.speech-bubble',
     { opacity: 0, y: 10 },  // 10 下から 0 の位置へ
-    { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }
+    { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out',
+      onComplete: () => {
+        // アニメーションが完了した後にふわっと削除
+        gsap.to('.speech-bubble', {
+          opacity: 0,
+          y: -10,
+          duration: 1,
+          ease: 'power2.out',
+          delay: 1.5,  // 1.5秒待つ
+          onComplete: () => {
+            // 完全に透明になったら削除
+            document.querySelector('.speech-bubble').remove();
+          }
+        });
+      }
+    }
   )
 }
 

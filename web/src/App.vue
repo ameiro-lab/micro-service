@@ -13,18 +13,18 @@
   font-family: 'Poppins', sans-serif !important;
 }
 /* 25対75のレイアウト */
-.layout-25-75 {
+.layout-20-80 {
   width: 100%;
   height: 100vh;
   display: flex;
   flex-direction: row;
 }
-.layout-25-75 .content-25 {
-  width: 25%;
+.layout-20-80 .content-20 {
+  width: 20%;
   min-width: 150px;
-  max-width: 25%;
+  max-width: 20%;
 }
-.layout-25-75 .content-75 {
-  width: 75%;
+.layout-20-80 .content-80 {
+  width: 80%;
 }
 </style>

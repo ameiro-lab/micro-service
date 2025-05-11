@@ -73,7 +73,7 @@ export default {
 
   // works
   'works.title' : 'No projects to show yet...',
-  'works.text' : 'Here are some of the projects I’ve worked on.',
+  'works.text' : 'Let me introduce the paw prints of my personal development journey.',
 
   // message
   'message.ERR-API-001': 'Looks like the server is taking a nap... woof!',

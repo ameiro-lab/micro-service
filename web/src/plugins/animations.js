@@ -60,24 +60,18 @@ export const animateFadeInFrom = (target, direction = 'bottom', duration = 1, of
       console.warn(`Invalid direction "${direction}" passed to animateFadeInFrom`);
   }
 
+  // アニメーション前に要素をリセット
+  gsap.set(target, { opacity: 0, x, y });
+
   // GSAPを使用してアニメーションを作成
-  return gsap.fromTo(
-    target,
-    {
-      // 初期状態：透明で指定方向にオフセットされた位置
-      opacity: 0,
-      x,
-      y,
-    },
-    {
-      // 最終状態：完全に表示され、本来の位置に配置
-      opacity: 1,
-      x: 0,
-      y: 0,
-      duration,  // アニメーション時間
-      ease: "power2.out",  // イージング関数（徐々に減速）
-    }
-  );
+  return gsap.to(target, {
+    // 最終状態：完全に表示され、本来の位置に配置
+    opacity: 1,
+    x: 0,
+    y: 0,
+    duration,  // アニメーション時間
+    ease: "power2.out",  // イージング関数（徐々に減速）
+  });
 };
 
 
