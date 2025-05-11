@@ -384,7 +384,7 @@ function formatText(text) {
 // ムギを押下時、
 const onclickMugi = () => {
   // 吹き出しを表示する
-  let message = t('aboutme.mugi.1');
+  let message = Math.random() < 0.5 ? t('aboutme.mugi.1') : t('aboutme.mugi.2');
   speechBubble.value.showBubble(message);
   // 尻尾を振る
   mugiShithigt.value.shakeTail();

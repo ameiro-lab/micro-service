@@ -80,7 +80,8 @@ export default {
   'message.ERR-LOGIN-001': 'Uh-oh... We can\'t find your pawprint.',
 
   // mugi
-  'aboutme.mugi.1' : 'I\'m watching over your work! Woof!',
+  'aboutme.mugi.1' : 'That\'s all, thankyou!',
+  'aboutme.mugi.2' : 'I\'m watching over your work! Woof!',
   'works.mugi.none' : '',
   'works.mugi.def' : '',
   
