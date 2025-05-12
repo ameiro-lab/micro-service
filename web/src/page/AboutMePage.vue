@@ -94,7 +94,7 @@
         <div v-if="$vuetify.display.smAndDown">
           <v-expansion-panels multiple variant="accordion">
             <v-expansion-panel rounded="0"
-              v-for="(project, index) in projectList.slice().reverse()"
+              v-for="(project, index) in projectList"
               :key="project.title">
               <v-expansion-panel-title color="primary"
               >

@@ -2,7 +2,7 @@
   <div class="pb-5">
     <v-card
       class="elevation-1" variant="outlined" color="primary">
-      <v-card-text class="text-h5 font-weight-bold mb-6">
+      <v-card-text class="text-h5 font-weight-bold mb-3">
         {{ $t('contact.title') }}
       </v-card-text>
       
