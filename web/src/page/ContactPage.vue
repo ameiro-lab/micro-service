@@ -1,50 +1,79 @@
 <template>
-  <v-container class="px-4" max-width="600">
-        <v-card class="pa-8 elevation-1" color="primary" variant="outlined">
-          <v-card-title class="text-h5 font-weight-bold mb-6">
-            {{ $t('contact.title') }}
-          </v-card-title>
-          
-          <v-card-text>
-            <p v-if="$t('contact.text')">{{ $t('contact.text') }}</p>
+  <div class="pb-5">
+    <v-card
+      class="elevation-1" variant="outlined" color="primary">
+      <v-card-text class="text-h5 font-weight-bold mb-6">
+        {{ $t('contact.title') }}
+      </v-card-text>
+      
+      <v-card-text class="mb-5">
+        <p v-if="$t('contact.text')">{{ $t('contact.text') }}</p>
 
-            <!-- ステップ表示部分 -->
-            <div v-if="currentStep === 1">
-              <v-form ref="contactForm" v-model="isFormValid" @submit.prevent="validateAndConfirm">
-                <!-- お名前 -->
+        <!-- ステップ表示部分 -->
+        <div v-if="currentStep === 1">
+          <v-form ref="contactForm" v-model="isFormValid" @submit.prevent="validateAndConfirm">
+            <!-- お名前 -->
+            <v-row>
+              <v-col cols="12" md="5">
                 <v-text-field
                   v-model="formData.name"
                   :label="$t('contact.name.label')"
                   :placeholder="$t('contact.name.placeholder')"
                   :rules="[rules.required]"
                   variant="outlined"
-                  color="primary"
-                  class="mb-4"
-                ></v-text-field>
-                
-                <!-- メールアドレス -->
+                  color="primary" />
+              </v-col>
+            </v-row>
+            
+            
+            <!-- メールアドレス -->
+             <v-row dense>
+              <v-col cols="12" md="5">
                 <v-text-field
                   v-model="formData.email"
                   :label="$t('contact.email.label')"
                   :placeholder="$t('contact.email.placeholder')"
                   :rules="[rules.required, rules.email]"
                   variant="outlined"
-                  color="primary"
-                  class="mb-4"
-                ></v-text-field>
-                
-                <!-- 件名 -->
+                  color="primary" />
+              </v-col>
+            </v-row>
+            
+            <!-- 件名チップ -->
+            <v-row dense>
+              <v-col cols="12">
+                <p>{{ $t('contact.subject.select') }}</p>
+                <v-chip-group
+                  v-model="selectedSubject"
+                  column
+                  mandatory>
+                  <v-chip
+                    v-for="option in subjectOptions"
+                    :key="option"
+                    :value="option"
+                    base-color="primary"
+
+                    selected-class="bg-primary"
+                    variant="tonal">
+                    {{ option }}
+                  </v-chip>
+                </v-chip-group>
+              </v-col>
+              <!-- 件名入力（選択された内容を編集可） -->
+              <v-col cols="12">
                 <v-text-field
                   v-model="formData.subject"
                   :label="$t('contact.subject.label')"
                   :placeholder="$t('contact.subject.placeholder')"
                   :rules="[rules.required]"
                   variant="outlined"
-                  color="primary"
-                  class="mb-4"
-                ></v-text-field>
-                
-                <!-- お問い合わせ内容 -->
+                  color="primary" />
+              </v-col>
+            </v-row>
+            
+            <!-- お問い合わせ内容 -->
+             <v-row dense>
+              <v-col cols="12">
                 <v-textarea
                   v-model="formData.message"
                   :label="$t('contact.message.label')"
@@ -52,86 +81,86 @@
                   :rules="[rules.required]"
                   variant="outlined"
                   color="primary"
-                  rows="6"
-                  class="mb-4"
-                ></v-textarea>
-                <!-- 送信 -->
-                <div class="d-flex justify-center mt-4">
-                  <v-btn
-                    color="primary"
-                    type="submit"
-                    :disabled="!isFormValid">
-                    {{ $t('contact.confirm') }}
-                  </v-btn>
-                </div>
-              </v-form>
-            </div>
-            
-            <!-- ステップ2: 確認画面 -->
-            <div v-else-if="currentStep === 2">
-              <v-list>
-                <v-list-item>
-                  <v-list-item-title>{{ $t('contact.name.label') }}</v-list-item-title>
-                  <v-list-item-subtitle>{{ formData.name }}</v-list-item-subtitle>
-                </v-list-item>
-                
-                <v-divider class="mb-3" />
-                
-                <v-list-item>
-                  <v-list-item-title>{{ $t('contact.email.label') }}</v-list-item-title>
-                  <v-list-item-subtitle>{{ formData.email }}</v-list-item-subtitle>
-                </v-list-item>
-                
-                <v-divider class="mb-3" />
-                
-                <v-list-item>
-                  <v-list-item-title>{{ $t('contact.subject.label') }}</v-list-item-title>
-                  <v-list-item-subtitle>{{ formData.subject }}</v-list-item-subtitle>
-                </v-list-item>
-                
-                <v-divider class="mb-3" />
-                
-                <v-list-item>
-                  <v-list-item-title>{{ $t('contact.message.label') }}</v-list-item-title>
-                  <v-list-item-subtitle class="text-wrap">{{ formData.message }}</v-list-item-subtitle>
-                </v-list-item>
-              </v-list>
-              <!-- ボタン -->
-              <div class="d-flex justify-center gap-4 mt-4">
-                <v-btn variant="outlined" @click="currentStep = 1">
-                  戻る
-                </v-btn>
-                <v-btn class="ml-5"
-                  color="primary" @click="submitForm"
-                  :loading="isSubmitting" >
-                  {{ $t('contact.submit') }}
-                </v-btn>
-              </div>
-            </div>
-          </v-card-text>
-        </v-card>
-        
-        <!-- 送信後のスナックバー -->
-        <v-snackbar
-          v-model="snackbar.show"
-          :color="snackbar.color"
-          :timeout="3000"
-        >
-          {{ snackbar.text }}
-          <template v-slot:actions>
-            <v-btn
-              color="white" variant="text"
-              @click="snackbar.show = false">
-              閉じる
-            </v-btn>
-          </template>
-        </v-snackbar>
+                  rows="6" />
+              </v-col>
+            </v-row>
 
-  </v-container>
+            <!-- 送信 -->
+            <div class="d-flex justify-center mt-4">
+              <v-btn
+                color="primary"
+                type="submit"
+                :disabled="!isFormValid">
+                {{ $t('contact.confirm') }}
+              </v-btn>
+            </div>
+          </v-form>
+        </div>
+        
+        <!-- ステップ2: 確認画面 -->
+        <div v-else-if="currentStep === 2">
+          <v-list>
+            <v-list-item>
+              <v-list-item-title>{{ $t('contact.name.label') }}</v-list-item-title>
+              <v-list-item-subtitle>{{ formData.name }}</v-list-item-subtitle>
+            </v-list-item>
+            
+            <v-divider class="mb-3" />
+            
+            <v-list-item>
+              <v-list-item-title>{{ $t('contact.email.label') }}</v-list-item-title>
+              <v-list-item-subtitle>{{ formData.email }}</v-list-item-subtitle>
+            </v-list-item>
+            
+            <v-divider class="mb-3" />
+            
+            <v-list-item>
+              <v-list-item-title>{{ $t('contact.subject.label') }}</v-list-item-title>
+              <v-list-item-subtitle>{{ formData.subject }}</v-list-item-subtitle>
+            </v-list-item>
+            
+            <v-divider class="mb-3" />
+            
+            <v-list-item>
+              <v-list-item-title>{{ $t('contact.message.label') }}</v-list-item-title>
+              <v-list-item-subtitle class="text-wrap">{{ formData.message }}</v-list-item-subtitle>
+            </v-list-item>
+          </v-list>
+          <!-- ボタン -->
+          <div class="d-flex justify-center gap-4 mt-4">
+            <v-btn variant="outlined" @click="currentStep = 1">
+              {{ $t('contact.back') }}
+            </v-btn>
+            <v-btn class="ml-5"
+              color="primary" @click="submitForm"
+              :loading="isSubmitting" >
+              {{ $t('contact.submit') }}
+            </v-btn>
+          </div>
+        </div>
+      </v-card-text>
+    </v-card>
+    
+    <!-- 送信後のスナックバー -->
+    <v-snackbar
+      v-model="snackbar.show"
+      :color="snackbar.color"
+      :timeout="3000"
+    >
+      {{ snackbar.text }}
+      <template v-slot:actions>
+        <v-btn
+          color="white" variant="text"
+          @click="snackbar.show = false">
+          {{ $t('contact.close') }}
+        </v-btn>
+      </template>
+    </v-snackbar>
+  </div>
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
@@ -144,11 +173,18 @@ const isSubmitting = ref(false);
 
 // フォームデータ
 const formData = reactive({
-  name: 'a',
-  email: 'example@xx.com',
-  subject: 'a',
-  message: 'a'
+  name: '',
+  email: '',
+  subject: '',
+  message: ''
 });
+
+const selectedSubject = ref('')
+const subjectOptions = [
+  t('contact.subject.request'),
+  t('contact.subject.collab'),
+  t('contact.subject.other')
+]
 
 // バリデーションルール
 const rules = {
@@ -166,11 +202,26 @@ const snackbar = reactive({
   color: 'success'
 });
 
-// バリデーション実行して確認画面に進む
+// 送信ボタン押下時、
 const validateAndConfirm = async () => {
+
+  console.log("selectedSubject:", selectedSubject.value);
+  console.log("name:", formData.name);
+  console.log("email:", formData.email);
+  console.log("message:", formData.message);
+  console.log("subject:", formData.subject);
+
+  // バリデーション実行
   const { valid } = await contactForm.value.validate();
-  
-  if (valid) {
+
+  if (!valid) {
+    // バリデーションエラー時
+    console.warn(t('validation.invalid'));
+    // 例：ページ上部にスクロールしてエラーを目立たせる
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  } else {
+    // 確認画面に進む
     currentStep.value = 2;
   }
 };
@@ -184,16 +235,17 @@ const submitForm = async () => {
     // 例: await axios.post('/api/contact', formData);
     
     // 成功時の処理
-    snackbar.text = 'お問い合わせを送信しました。ありがとうございます。';
+    snackbar.text = t('contact.success');
     snackbar.color = 'success';
     snackbar.show = true;
     
     // フォームリセット
     resetForm();
+
   } catch (error) {
     // エラー時の処理
     console.error('送信エラー:', error);
-    snackbar.text = '送信に失敗しました。しばらく経ってからお試しください。';
+    snackbar.text = t('contact.failure');
     snackbar.color = 'error';
     snackbar.show = true;
   } finally {

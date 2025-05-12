@@ -1,15 +1,12 @@
 <template>
-  <div style="width: 300px; height: auto; position: relative;" class="overlay-center">
-    <img id="imo-before" src="@/assets/png/imo_before.png" style="position: absolute; top: 0; left: 0; opacity: 0; width: 250px;" />
-    <img id="imo-after" src="@/assets/svg/imo_after.svg" style="position: absolute; top: 0; left: 0; opacity: 0;" />
+  <div class="overlay-center">
+    <img id="imo-before" src="@/assets/png/imo_before.png" />
+    <img id="imo-after" src="@/assets/svg/imo_after.svg" />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { animateFadeInFrom, animationBounce } from '@/plugins/animations';
-
 
 /**
  * メソッドの定義
@@ -71,4 +68,22 @@ top: 50%;
 left: 50%;
 transform: translate(-50%, -50%);
 */
+
+#imo-before {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  width: 180px;
+}
+
+#imo-after {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  width: 300px;
+}
 </style>

@@ -5,7 +5,7 @@
       class="circle">
       <MugiShit @on-click="onclickMugiShit" />
       <!-- 吹き出し -->
-      <div class="speech-bubble">
+      <div class="speech-bubble text-center">
         {{ speechBubbleText }}
       </div>
     </div>

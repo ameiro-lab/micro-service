@@ -84,12 +84,21 @@ export default {
   'contact.email.placeholder': '',
   'contact.subject.label': 'Subject',
   'contact.subject.placeholder': 'e.g. About Job Offer',
+  'contact.subject.select': 'Select a subject (single choice only)',
+  'contact.subject.request': 'Work Request',
+  'contact.subject.collab': 'Collaboration Inquiry',
+  'contact.subject.other': 'Other',
   'contact.message.label': 'Message',
   'contact.message.placeholder': 'Please enter the details of your inquiry.',
   'contact.submit': 'Send',
   'contact.confirm': 'Confirm Your Message',
   'validation.required': 'This field is required.',
   'validation.invalidEmail': 'Please enter a valid email address.',
+  'validation.invalid': 'There are errors in your input.',
+  'contact.back': 'Back',
+  'contact.close': 'Close',
+  'contact.success': 'Your inquiry has been sent. Thank you!',
+  'contact.failure': 'Failed to send. Please try again later.',
 
 
   // message
