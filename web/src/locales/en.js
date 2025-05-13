@@ -74,6 +74,7 @@ export default {
   // works
   'works.title' : 'No projects to show yet...',
   'works.text' : 'Let me introduce the paw prints of my personal development journey.',
+  'releaseDate': 'Released in {month} {year}',
 
   // contact
   'contact.title' : 'Contact Us',

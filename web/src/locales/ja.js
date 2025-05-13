@@ -20,8 +20,8 @@ export default {
   'home.logout' : 'ログアウト',
   'home.message.init': 'こんにちは。呼びましたか？',
   'home.message.default': 'どうしましたか？',
-  'home.message.aboutme' : '飼い主のことが気になりますか？',
-  'home.message.works' : '宝物を見たいのですね！',
+  'home.message.aboutme' : '飼い主のこと教えます',
+  'home.message.works' : '準備中です',
   'home.message.contact' : 'お仕事のご相談はこちら🐾',
   'home.message.none' : 'さつまいもはどこ？',
   'home.message.logout' : 'また遊びに来てください！',
@@ -68,12 +68,13 @@ export default {
   // works
   'works.title' : '',
   'works.text' : '仔犬が夢中で穴を掘るように、コツコツと技術を深めました。',
+  'releaseDate': '{year}年{month}月リリース',
 
   // contact
   'contact.title' : 'お問い合わせ',
   'contact.text' : '',
   'contact.name.label': 'お名前',
-  'contact.name.placeholder': '例：安藤 ムギ',
+  'contact.name.placeholder': '例：ムギ',
   'contact.email.label': 'メールアドレス',
   'contact.email.placeholder': '',
   'contact.subject.label': '件名',

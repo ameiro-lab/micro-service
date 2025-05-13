@@ -208,7 +208,6 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useDisplay } from 'vuetify'
 import { useI18n } from 'vue-i18n'
 import MugiShithigt from '@/component/thing/MugiShithigt.vue';
 import SpeechBubble from '@/component/thing/SpeechBubble.vue';
